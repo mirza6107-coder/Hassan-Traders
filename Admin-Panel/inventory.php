@@ -91,12 +91,14 @@ if (!$conn) {
   $brandCol = in_array('Brand', $cols) ? 'Brand' : (in_array('brand', $cols) ? 'brand' : 'Brand');
   $qtyCol   = in_array('Quantity', $cols) ? 'Quantity' : (in_array('stock', $cols) ? 'stock' : 'Quantity');
   $priceCol = in_array('Price', $cols) ? 'Price' : (in_array('price', $cols) ? 'price' : 'Price');
+  $origPriceCol = in_array('orignalprice', $cols) ? 'orignalprice' : (in_array('orignalprice', $cols) ? 'orignalprice' : 'orignalprice');
 
   $result = mysqli_query(
     $conn,
     "SELECT `$idCol` as id, `$nameCol` as name, `$catCol` as category,
-                `$brandCol` as brand, `$qtyCol` as stock, `$priceCol` as price
-         FROM products ORDER BY `$idCol` DESC"
+            `$brandCol` as brand, `$qtyCol` as stock, `$priceCol` as price, 
+            `$origPriceCol` as orignalprice
+     FROM products ORDER BY `$idCol` DESC"
   );
 
   if (!$result) {
@@ -110,6 +112,7 @@ if (!$conn) {
         'brand'    => $row['brand'] ?? 'Local',
         'stock'    => (int)$row['stock'],
         'price'    => (float)$row['price'],
+        'orignalprice' => (float)($row['orignalprice'] ?? 0), 
       ];
     }
   }
@@ -329,7 +332,8 @@ ob_end_clean();
         name: row.dataset.name,
         category: row.dataset.cat,
         stock: parseInt(row.dataset.stock),
-        price: parseFloat(row.dataset.price)
+        price: parseFloat(row.dataset.price),
+        original_price: parseFloat(row.querySelector('td:nth-child(6)').textContent.replace('Rs. ', '').replace(/,/g, ''))
       });
     });
 
