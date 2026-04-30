@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Securely hash the password
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO signupform (Fullname, Email, password)
+    $sql = "INSERT INTO users (Fullname, Email, password)
             VALUES ('$fullname','$emailaddress','$hashed_password')";
 
     if (mysqli_query($conn, $sql)) {
