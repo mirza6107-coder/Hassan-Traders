@@ -1,0 +1,343 @@
+:root {
+  --primary: #c0392b;
+  --primary-dark: #96281b;
+  --primary-light: #fdecea;
+  --bg: #f4f6f9;
+  --white: #ffffff;
+  --border: #e8ecf0;
+  --text-muted: #6c757d;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Main ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-title h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+.topbar-title p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+.btn-primary-custom {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-primary-custom:hover {
+  background: var(--primary-dark);
+  color: white;
+}
+.content {
+  padding: 28px;
+  flex: 1;
+}
+
+/* ── Stats ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.stat-val {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.stat-val.green {
+  color: #27ae60;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Table ── */
+.card-panel {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.card-panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-panel-header h5 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead th {
+  background: var(--bg);
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+tbody tr:hover {
+  background: #fafbfc;
+}
+tbody tr:last-child {
+  border-bottom: none;
+}
+td {
+  padding: 14px 16px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+.badge-active {
+  background: #d4edda;
+  color: #155724;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-inactive {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.prod-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.action-btn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid;
+  background: transparent;
+  transition: all 0.2s;
+}
+.btn-edit {
+  border-color: #27ae60;
+  color: #27ae60;
+}
+.btn-edit:hover {
+  background: #27ae60;
+  color: white;
+}
+.btn-toggle {
+  border-color: #f39c12;
+  color: #f39c12;
+}
+.btn-toggle:hover {
+  background: #f39c12;
+  color: white;
+}
+.btn-delete {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.btn-delete:hover {
+  background: var(--primary);
+  color: white;
+}
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+.empty-state i {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.show {
+  display: flex;
+}
+.modal-box {
+  background: var(--white);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+}
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--primary);
+  border-radius: 16px 16px 0 0;
+}
+.modal-header h5 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: white;
+}
+.modal-body {
+  padding: 24px;
+}
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+.form-label span {
+  color: var(--primary);
+}
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+.form-control:focus {
+  border-color: var(--primary);
+}
+.btn-outline-custom {
+  background: transparent;
+  color: #555;
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-outline-custom:hover {
+  border-color: #999;
+}
+
+/* ── Error banner ── */
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: #991b1b;
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Toast ── */
+.toast-msg {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #1a1a2e;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.toast-msg.show {
+  opacity: 1;
+}
