@@ -72,6 +72,41 @@ body {
   background: var(--primary-dark);
   color: white;
 }
+/* Style for the non-active (outline) buttons */
+.topbar .btn-group .btn-outline-secondary {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+}
+
+.topbar .btn-group .btn-outline-secondary:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Style for the active (primary) button */
+.topbar .btn-group .btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+}
+
+.topbar .btn-group .btn-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* Ensure the group has a clean gap from the print button */
+.topbar .btn-group {
+  margin-right: 15px;
+}
 
 .content {
   padding: 28px;

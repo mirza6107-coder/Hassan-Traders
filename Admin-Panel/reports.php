@@ -138,9 +138,9 @@ while ($row = mysqli_fetch_assoc($res)) {
 
       <!-- Period Selector -->
       <div class="btn-group">
-        <a href="?period=month" class="btn btn-sm <?php echo $period === 'month' ? 'btn-primary' : 'btn-outline-secondary'; ?>">This Month</a>
-        <a href="?period=3months" class="btn btn-sm <?php echo $period === '3months' ? 'btn-primary' : 'btn-outline-secondary'; ?>">Last 3 Months</a>
-        <a href="?period=6months" class="btn btn-sm <?php echo $period === '6months' ? 'btn-primary' : 'btn-outline-secondary'; ?>">Last 6 Months</a>
+        <a href="?period=month" class="btn  <?php echo $period === 'month' ? 'btn-primary' : 'btn-outline-secondary'; ?>">This Month</a>
+        <a href="?period=3months" class="btn  <?php echo $period === '3months' ? 'btn-primary' : 'btn-outline-secondary'; ?>">Last 3 Months</a>
+        <a href="?period=6months" class="btn  <?php echo $period === '6months' ? 'btn-primary' : 'btn-outline-secondary'; ?>">Last 6 Months</a>
       </div>
 
       <button class="btn-primary-custom" onclick="window.print()">
