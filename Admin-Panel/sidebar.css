@@ -78,7 +78,7 @@
   text-align: center;
 }
 
-/* Footer */
+/* ── Footer ── */
 .sidebar-footer {
   padding: 18px 20px;
   border-top: 1px solid #e8ecf0;
@@ -95,18 +95,55 @@
   margin-bottom: 14px;
 }
 
+/* ── Avatar: supports both photo and initials ── */
 .sidebar-user-avatar {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #c0392b !important;
-  color: white !important;
+  background: #c0392b;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 15px;
   flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #fdecea;
+  transition: border-color 0.2s ease;
+}
+
+.sidebar-user-avatar:hover {
+  border-color: #c0392b;
+}
+
+/* Photo image fills the circle */
+.sidebar-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Initials text (shown when no photo) */
+.sidebar-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  user-select: none;
+}
+
+/* ── User info ── */
+.sidebar-user-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .sidebar-user-name {
@@ -121,6 +158,24 @@
 .sidebar-user-role {
   font-size: 12px;
   color: #6c757d;
+  margin-top: 1px;
+}
+
+/* ── Logout icon ── */
+.sidebar-logout-btn {
+  color: #c0392b;
+  font-size: 18px;
+  text-decoration: none;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-logout-btn:hover {
+  opacity: 1;
+  transform: translateX(2px);
 }
 
 .btn-back {
@@ -146,15 +201,6 @@
 }
 
 /* Scrollbar */
-.sidebar::-webkit-scrollbar {
-  width: 5px;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }

@@ -69,7 +69,7 @@ $res = mysqli_query($conn, $query);
 while ($row = mysqli_fetch_assoc($res)) {
   $monthly_trend[] = $row;
 }
-$monthly_trend = array_reverse($monthly_trend); // oldest to newest
+$monthly_trend = array_reverse($monthly_trend);
 
 // 3. Top 8 Selling Products
 $top_products = [];
@@ -104,12 +104,10 @@ while ($row = mysqli_fetch_assoc($res)) {
 }
 
 // 5. Order Status Distribution
-// Order Status Distribution Query
 $status_dist = [];
 $query = "SELECT status_ENUM, COUNT(*) as count FROM orders GROUP BY status_ENUM";
 $res = mysqli_query($conn, $query);
 while ($row = mysqli_fetch_assoc($res)) {
-  // This will store keys like 'Delivered', 'Pending', etc.
   $status_dist[$row['status_ENUM']] = (int)$row['count'];
 }
 ?>
@@ -120,104 +118,145 @@ while ($row = mysqli_fetch_assoc($res)) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced Reports - Hassan Traders</title>
+  <title>Advanced Reports — Hassan Traders</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-  <link rel="stylesheet" href="reports.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="reports.css" />
 </head>
 
 <body>
   <?php include('sidebar.php'); ?>
 
   <main class="main">
+
+    <!-- ── TOPBAR ── -->
     <div class="topbar">
       <div class="topbar-title">
-        <h4>Advanced Business Reports</h4>
-        <p>Real-time analytics • Updated <?php echo date('d M Y, h:i A'); ?></p>
+        <h4><span>Hassan Traders</span> — Reports</h4>
+        <p>
+          <span class="live-dot"></span>
+          Live data &nbsp;·&nbsp; <?php echo date('d M Y, h:i A'); ?>
+        </p>
       </div>
 
       <!-- Period Selector -->
-      <div class="btn-group">
-        <a href="?period=month" class="btn btn-sm <?php echo $period === 'month' ? 'btn-primary' : 'btn-outline-secondary'; ?>">This Month</a>
-        <a href="?period=3months" class="btn btn-sm <?php echo $period === '3months' ? 'btn-primary' : 'btn-outline-secondary'; ?>">Last 3 Months</a>
-        <a href="?period=6months" class="btn btn-sm <?php echo $period === '6months' ? 'btn-primary' : 'btn-outline-secondary'; ?>">Last 6 Months</a>
+      <div class="period-selector">
+        <a href="?period=month"   class="<?php echo $period === 'month'   ? 'active' : ''; ?>">This Month</a>
+        <a href="?period=3months" class="<?php echo $period === '3months' ? 'active' : ''; ?>">3 Months</a>
+        <a href="?period=6months" class="<?php echo $period === '6months' ? 'active' : ''; ?>">6 Months</a>
       </div>
 
-      <button class="btn-primary-custom" onclick="window.print()">
-        <i class="bi bi-printer"></i> Print / Export
+      <button class="btn-print" onclick="window.print()">
+        <i class="bi bi-printer-fill"></i> Export
       </button>
     </div>
 
+    <!-- ── CONTENT ── -->
     <div class="content">
+
       <!-- Key Metrics -->
       <div class="stat-row">
+
         <div class="stat-card">
-          <div class="stat-label">Revenue (<?php echo ucfirst($period); ?>)</div>
-          <div class="stat-val">Rs. <?php echo number_format($metrics['period_revenue']); ?></div>
+          <div class="stat-card-icon"><i class="bi bi-graph-up-arrow"></i></div>
+          <div class="stat-label">Revenue (<?php echo $period === 'month' ? 'This Month' : ($period === '3months' ? 'Last 3 Mo.' : 'Last 6 Mo.'); ?>)</div>
+          <div class="stat-val">
+            <span class="currency">Rs.</span><?php echo number_format($metrics['period_revenue']); ?>
+          </div>
+          <div class="stat-change"><i class="bi bi-arrow-up-short"></i> Delivered orders only</div>
         </div>
+
         <div class="stat-card">
+          <div class="stat-card-icon"><i class="bi bi-bag-check-fill"></i></div>
           <div class="stat-label">Total Orders</div>
           <div class="stat-val"><?php echo number_format($metrics['orders_count']); ?></div>
+          <div class="stat-change neutral"><i class="bi bi-calendar3"></i> Selected period</div>
         </div>
+
         <div class="stat-card">
+          <div class="stat-card-icon"><i class="bi bi-receipt-cutoff"></i></div>
           <div class="stat-label">Avg. Order Value</div>
-          <div class="stat-val">Rs. <?php echo number_format($metrics['avg_order']); ?></div>
+          <div class="stat-val">
+            <span class="currency">Rs.</span><?php echo number_format($metrics['avg_order']); ?>
+          </div>
+          <div class="stat-change neutral"><i class="bi bi-calculator"></i> Per transaction</div>
         </div>
+
         <div class="stat-card">
+          <div class="stat-card-icon"><i class="bi bi-people-fill"></i></div>
           <div class="stat-label">Active Customers</div>
           <div class="stat-val"><?php echo number_format($metrics['active_customers']); ?></div>
+          <div class="stat-change neutral"><i class="bi bi-person-check"></i> Unique buyers</div>
         </div>
+
       </div>
 
+      <!-- Charts Row 1 -->
       <div class="charts-grid">
-        <!-- Monthly Revenue Trend -->
+
+        <!-- Revenue Trend -->
         <div class="card-panel">
           <div class="card-panel-header">
-            <h5>Revenue Trend (Last 6 Months)</h5>
+            <h5><i class="bi bi-bar-chart-line-fill me-2" style="color:var(--primary)"></i>Revenue Trend</h5>
+            <span class="card-panel-badge">Last 6 Months</span>
           </div>
           <div class="card-panel-body">
-            <canvas id="revenueTrendChart" height="110"></canvas>
+            <canvas id="revenueTrendChart" height="115"></canvas>
           </div>
         </div>
 
-        <!-- Order Status Distribution -->
+        <!-- Order Status Donut -->
         <div class="card-panel">
           <div class="card-panel-header">
-            <h5>Order Status Distribution</h5>
+            <h5><i class="bi bi-pie-chart-fill me-2" style="color:var(--primary)"></i>Order Status</h5>
           </div>
-          <div class="card-panel-body">
-            <canvas id="statusChart" height="200"></canvas>
+          <div class="card-panel-body" style="display:flex; flex-direction:column; align-items:center;">
+            <canvas id="statusChart" height="200" style="max-width:240px;"></canvas>
           </div>
         </div>
+
       </div>
 
+      <!-- Charts Row 2 -->
       <div class="charts-grid-2">
+
         <!-- Top Products -->
         <div class="card-panel">
           <div class="card-panel-header">
-            <h5>Top Selling Products</h5>
+            <h5><i class="bi bi-trophy-fill me-2" style="color:var(--primary)"></i>Top Selling Products</h5>
+            <span class="card-panel-badge">By Revenue</span>
           </div>
-          <div class="card-panel-body" style="padding: 16px 20px; max-height: 420px; overflow-y: auto;">
-            <?php foreach ($top_products as $i => $p): ?>
-              <div class="top-prod-item">
-                <div class="top-prod-rank <?php echo $i == 0 ? 'gold' : ($i == 1 ? 'silver' : ($i == 2 ? 'bronze' : '')); ?>"><?php echo $i + 1; ?></div>
-                <div class="top-prod-name"><?php echo htmlspecialchars($p['product_name']); ?></div>
-                <div class="top-prod-rev">Rs. <?php echo number_format($p['total_revenue']); ?></div>
-              </div>
-            <?php endforeach; ?>
+          <div class="products-scroll">
+            <div class="products-list" style="padding: 4px 0;">
+              <?php foreach ($top_products as $i => $p): ?>
+                <div class="top-prod-item">
+                  <div class="top-prod-rank <?php echo $i == 0 ? 'gold' : ($i == 1 ? 'silver' : ($i == 2 ? 'bronze' : '')); ?>">
+                    <?php echo $i + 1; ?>
+                  </div>
+                  <div class="top-prod-info">
+                    <div class="top-prod-name"><?php echo htmlspecialchars($p['product_name']); ?></div>
+                    <div class="top-prod-qty"><?php echo number_format($p['total_qty']); ?> units sold</div>
+                  </div>
+                  <div class="top-prod-rev">Rs.&nbsp;<?php echo number_format($p['total_revenue']); ?></div>
+                </div>
+              <?php endforeach; ?>
+            </div>
           </div>
         </div>
 
         <!-- Sales by City -->
         <div class="card-panel">
           <div class="card-panel-header">
-            <h5>Sales by City</h5>
+            <h5><i class="bi bi-geo-alt-fill me-2" style="color:var(--primary)"></i>Sales by City</h5>
+            <span class="card-panel-badge">Top 6</span>
           </div>
           <div class="card-panel-body">
             <?php
-            $max_rev = !empty($city_sales) ? $city_sales[0]['revenue'] : 1;
-            foreach ($city_sales as $city):
-              $pct = round(($city['revenue'] / $max_rev) * 100);
+              $max_rev = !empty($city_sales) ? $city_sales[0]['revenue'] : 1;
+              foreach ($city_sales as $city):
+                $pct = round(($city['revenue'] / $max_rev) * 100);
             ?>
               <div class="city-row">
                 <span class="city-name"><?php echo htmlspecialchars($city['city'] ?? 'Unknown'); ?></span>
@@ -227,15 +266,29 @@ while ($row = mysqli_fetch_assoc($res)) {
                 <span class="city-pct"><?php echo $pct; ?>%</span>
               </div>
             <?php endforeach; ?>
+
+            <!-- Revenue total note -->
+            <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-light);">
+              <div style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">ALL-TIME DELIVERED REVENUE</div>
+              <div style="font-size:22px; font-weight:800; color:var(--text); letter-spacing:-0.5px;">
+                Rs.&nbsp;<span style="color:var(--primary);"><?php echo number_format($metrics['total_revenue']); ?></span>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
-    </div>
+
+      <p class="footer-note">Hassan Traders &copy; <?php echo date('Y'); ?> &nbsp;·&nbsp; All figures reflect delivered orders unless noted</p>
+
+    </div><!-- /content -->
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
-    // Monthly Revenue Trend
+    Chart.defaults.font.family = "'Plus Jakarta Sans', system-ui, sans-serif";
+
+    // ── Revenue Trend ──
     new Chart(document.getElementById("revenueTrendChart"), {
       type: "line",
       data: {
@@ -244,61 +297,108 @@ while ($row = mysqli_fetch_assoc($res)) {
           label: "Revenue (Rs.)",
           data: <?php echo json_encode(array_column($monthly_trend, 'revenue')); ?>,
           borderColor: "#c0392b",
-          backgroundColor: "rgba(192,57,43,0.1)",
-          tension: 0.4,
-          borderWidth: 3,
-          pointRadius: 5
+          backgroundColor: (ctx) => {
+            const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+            gradient.addColorStop(0,   "rgba(192,57,43,0.18)");
+            gradient.addColorStop(1,   "rgba(192,57,43,0)");
+            return gradient;
+          },
+          tension: 0.42,
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: "#fff",
+          pointBorderColor: "#c0392b",
+          pointBorderWidth: 2,
+          pointHoverRadius: 7,
+          fill: true
         }]
       },
       options: {
         responsive: true,
+        interaction: { mode: 'index', intersect: false },
         plugins: {
-          legend: {
-            display: false
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#1a1e27",
+            titleColor: "#ffffff",
+            bodyColor: "#a0aab8",
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: v => "  Rs. " + Number(v.raw).toLocaleString()
+            }
           }
         },
         scales: {
           y: {
+            grid: { color: "rgba(0,0,0,0.04)" },
+            border: { dash: [4, 4] },
             ticks: {
-              callback: v => "Rs. " + (v / 1000000).toFixed(1) + "M"
+              color: "#7b8498",
+              font: { size: 11, weight: '600' },
+              callback: v => "Rs. " + (v >= 1000000 ? (v/1000000).toFixed(1)+"M" : (v/1000).toFixed(0)+"K")
             }
           },
           x: {
-            grid: {
-              display: false
+            grid: { display: false },
+            ticks: {
+              color: "#7b8498",
+              font: { size: 11, weight: '600' }
             }
           }
         }
       }
     });
 
-    // Order Status Distribution
+    // ── Order Status Donut ──
     new Chart(document.getElementById("statusChart"), {
       type: "doughnut",
       data: {
         labels: ["Delivered", "Pending", "Processing", "Shipped", "Cancelled"],
         datasets: [{
           data: [
-            <?php echo $status_dist['Delivered'] ?? 0; ?>,
-            <?php echo $status_dist['Pending'] ?? 0; ?>,
+            <?php echo $status_dist['Delivered']  ?? 0; ?>,
+            <?php echo $status_dist['Pending']    ?? 0; ?>,
             <?php echo $status_dist['Processing'] ?? 0; ?>,
-            <?php echo $status_dist['Shipped'] ?? 0; ?>,
-            <?php echo $status_dist['Cancelled'] ?? 0; ?>
+            <?php echo $status_dist['Shipped']    ?? 0; ?>,
+            <?php echo $status_dist['Cancelled']  ?? 0; ?>
           ],
-          backgroundColor: ["#27ae60", "#f39c12", "#2980b9", "#3498db", "#e74c3c"]
+          backgroundColor: ["#16a34a", "#d97706", "#2563eb", "#0891b2", "#c0392b"],
+          borderColor: "#ffffff",
+          borderWidth: 3,
+          hoverBorderWidth: 3,
+          hoverOffset: 6
         }]
       },
       options: {
         responsive: true,
-        cutout: "60%",
+        cutout: "64%",
         plugins: {
           legend: {
-            position: "bottom"
+            position: "bottom",
+            labels: {
+              padding: 14,
+              boxWidth: 10,
+              boxHeight: 10,
+              borderRadius: 3,
+              useBorderRadius: true,
+              font: { size: 12, weight: '600' },
+              color: "#1a1e27"
+            }
+          },
+          tooltip: {
+            backgroundColor: "#1a1e27",
+            titleColor: "#ffffff",
+            bodyColor: "#a0aab8",
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: v => "  " + v.label + ": " + v.raw.toLocaleString()
+            }
           }
         }
       }
     });
   </script>
 </body>
-
 </html>
