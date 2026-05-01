@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(result => {
             if (result.trim() === "Success") {
                 toast.style.background = "#f0fdf4"; // Success Green
-                toastText.innerText = "Message send successfully!";
+                toastText.innerText = "Message send successfully! We'll get back to you shortly";
                 toast.classList.add('show');
                 form.reset();
             } else {
