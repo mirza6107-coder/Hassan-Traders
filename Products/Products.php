@@ -8,12 +8,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hassan Traders — Products</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Stylesheets: Bootstrap & icons FIRST, then our custom CSS LAST so it wins -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
@@ -24,9 +22,7 @@
 
 <body>
 
-  <!-- ══════════════════════════════════════════
-     NAVBAR
-  ══════════════════════════════════════════ -->
+  <!-- ══ NAVBAR ══ -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top premium-navbar" id="mainNav">
     <div class="container">
 
@@ -63,10 +59,12 @@
             </a>
           </li>
         </ul>
+
         <div class="d-flex align-items-center me-lg-3">
           <a href="../Add to Cart and CheckOut/Cart.php" class="position-relative text-dark text-decoration-none">
             <i class="bi bi-cart3 fs-4"></i>
-            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <span id="cart-count"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               0
             </span>
           </a>
@@ -99,21 +97,16 @@
 
 
   <?php
-  /* ══════════════════════════════════════════════
-     DATABASE & DATA
-  ══════════════════════════════════════════════ */
-
+  /* ══ DATABASE & DATA ══ */
   $conn = mysqli_connect('localhost', 'root', '', 'htss');
   if (!$conn) die("Connection failed: " . mysqli_connect_error());
 
-  // Fetch all published products
   $all_result = mysqli_query($conn, "SELECT * FROM products WHERE LOWER(Status) = 'published' ORDER BY ID DESC");
   $all_products = [];
   while ($row = mysqli_fetch_assoc($all_result)) {
     $all_products[] = $row;
   }
 
-  // Fetch distinct categories
   $cat_result = mysqli_query($conn, "SELECT DISTINCT Category FROM products WHERE LOWER(Status) = 'published' ORDER BY Category ASC");
   $categories = [];
   while ($cat_row = mysqli_fetch_assoc($cat_result)) {
@@ -122,13 +115,11 @@
 
   mysqli_close($conn);
 
-  /* ── Helper: category name to safe HTML id ── */
   function catToId(string $cat)
   {
     return 'tab-' . preg_replace('/[^a-z0-9]+/', '-', strtolower(trim($cat)));
   }
 
-  /* ── Helper: category name to Bootstrap icon ── */
   function catIcon(string $cat)
   {
     $map = [
@@ -152,7 +143,6 @@
     return 'bi-box-seam';
   }
 
-  /* ── Helper: render product cards ── */
   function renderCards(array $products)
   {
     if (empty($products)) {
@@ -163,11 +153,11 @@
       $img          = htmlspecialchars($p['P_image']);
       $name         = htmlspecialchars($p['P_name']);
       $brand        = htmlspecialchars($p['Brand'] ?? '');
-      $priceDisplay = number_format($p['Price']);   // formatted for display: e.g. 1,500
-      $priceRaw     = (float)$p['Price'];           // raw float for JS
+      $priceDisplay = number_format($p['Price']);
+      $priceRaw     = (float)$p['Price'];
       $id           = (int)$p['ID'];
       $cat          = htmlspecialchars($p['Category'] ?? '');
-      $jsName       = addslashes($name);
+      $jsName       = addslashes($p['P_name']);
 
       echo "
     <div class='col-lg-3 col-md-4 col-sm-6 mb-4 product-card-wrap'>
@@ -178,23 +168,23 @@
                onerror=\"this.src='../Images/no-image.png'\">
           " . ($cat ? "<span class='card-badge'>{$cat}</span>" : "") . "
           <div class='card-overlay'>
-            <a href='view-products.php?id={$id}' class='overlay-btn'>
+            <!-- ✅ Now opens popup, not a new page -->
+            <button class='overlay-btn' onclick=\"openQuickView({$id}, '{$jsName}', {$priceRaw}, '{$img}')\">
               <i class='bi bi-eye'></i> Quick View
-            </a>
+            </button>
           </div>
         </div>
 
         <div class='card-body-inner'>
           " . ($brand ? "<div class='card-brand'>{$brand}</div>" : "") . "
           <div class='card-name'>{$name}</div>
-          
+
           <div class='card-footer-row d-flex justify-content-between align-items-center mt-2'>
             <div class='card-price'><span>Rs.</span> {$priceDisplay}</div>
-            
-            <button class='btn btn-sm btn-danger rounded-pill px-3' 
-        onclick=\"addToCartAndGo({$id}, '{$jsName}', {$priceRaw}, '{$img}')\">
-       <i class='bi bi-cart-plus'></i> Buy
-        </button>
+            <button class='btn btn-sm btn-danger rounded-pill px-3'
+              onclick=\"addToCartAndGo({$id}, '{$jsName}', {$priceRaw}, '{$img}')\">
+              <i class='bi bi-cart-plus'></i> Buy
+            </button>
           </div>
         </div>
 
@@ -205,9 +195,7 @@
   ?>
 
 
-  <!-- ══════════════════════════════════════════
-     HERO BANNER
-  ══════════════════════════════════════════ -->
+  <!-- ══ HERO ══ -->
   <section class="products-hero">
     <div class="container hero-inner">
       <div class="row align-items-center">
@@ -248,13 +236,11 @@
   </section>
 
 
-  <!-- ══════════════════════════════════════════
-     PRODUCTS SECTION
-  ══════════════════════════════════════════ -->
+  <!-- ══ PRODUCTS SECTION ══ -->
   <section class="products-section">
     <div class="container">
 
-      <!-- Search bar -->
+      <!-- Search -->
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-5">
         <div class="search-wrapper flex-grow-1">
           <i class="bi bi-search search-icon"></i>
@@ -269,11 +255,10 @@
 
       <div class="row g-4">
 
-        <!-- ── LEFT: Category Sidebar ── -->
+        <!-- Sidebar -->
         <div class="col-lg-2 col-md-3">
           <div class="category-sidebar">
             <div class="sidebar-title">Categories</div>
-
             <div class="sidebar-pills-scroll" id="v-pills-tab">
 
               <button class="cat-pill active" data-target="tab-all">
@@ -298,10 +283,9 @@
           </div>
         </div>
 
-        <!-- ── RIGHT: Tab Panels ── -->
+        <!-- Tab Panels -->
         <div class="col-lg-10 col-md-9">
 
-          <!-- All Products panel -->
           <div class="tab-pane show" id="tab-all">
             <div class="panel-header">
               <div class="panel-title">All <span>Products</span></div>
@@ -312,15 +296,12 @@
             </div>
           </div>
 
-          <!-- Dynamic category panels -->
           <?php foreach ($categories as $cat):
             $cat_products = array_values(array_filter($all_products, fn($p) => $p['Category'] === $cat));
           ?>
             <div class="tab-pane" id="<?php echo catToId($cat); ?>">
               <div class="panel-header">
-                <div class="panel-title">
-                  <?php echo htmlspecialchars($cat); ?> <span>Products</span>
-                </div>
+                <div class="panel-title"><?php echo htmlspecialchars($cat); ?> <span>Products</span></div>
                 <div class="panel-count"><?php echo count($cat_products); ?> items</div>
               </div>
               <div class="row">
@@ -329,7 +310,6 @@
             </div>
           <?php endforeach; ?>
 
-          <!-- No results state -->
           <div id="noResults">
             <i class="bi bi-search"></i>
             <p>No products found for your search.<br>
@@ -343,9 +323,7 @@
   </section>
 
 
-  <!-- ══════════════════════════════════════════
-     FOOTER
-  ══════════════════════════════════════════ -->
+  <!-- ══ FOOTER ══ -->
   <footer class="footer-section text-white pt-5 mt-3">
     <div class="container">
       <div class="row gy-4">
@@ -407,11 +385,32 @@
     </div>
   </footer>
 
-
-  <!-- WHATSAPP FLOATING BUTTON -->
+  <!-- WhatsApp -->
   <a href="https://wa.me/923000687080" class="whatsapp-btn" target="_blank">
     <i class="bi bi-whatsapp"></i>
   </a>
+
+  <!-- ══════════════════════════════════════════
+       QUICK VIEW MODAL
+  ══════════════════════════════════════════ -->
+  <div class="qv-overlay" id="qvOverlay">
+    <div class="qv-modal" id="qvModal">
+
+      <!-- Close button (always visible) -->
+      <button class="qv-close" onclick="closeQuickView()" title="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <!-- Dynamic content injected by JS -->
+      <div id="qvContent">
+        <!-- skeleton shown while loading -->
+        <div class="qv-skeleton">
+          <div class="qv-skel-box" style="height:300px;border-radius:16px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="../bootstrap-5.3.8-dist/bootstrap-5.3.8-dist/js/bootstrap.bundle.js"></script>
