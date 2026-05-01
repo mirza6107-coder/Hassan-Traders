@@ -1,6 +1,17 @@
 <?php
 session_start();
-include('db_connect.php');
+$host     = "localhost";
+$dbname   = "htss";   // ← CHANGE THIS
+$user     = "root"; 
+$pass     = ""; 
+
+$conn = mysqli_connect($host, $user, $pass, $dbname);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+mysqli_set_charset($conn, "utf8mb4");
 
 header('Content-Type: application/json');
 
@@ -81,13 +92,13 @@ $_SESSION['avatar'] = $avatar_url;
 try {
   $uid = $_SESSION['user_id'] ?? null;
   if ($uid) {
-    $stmt = $conn->prepare("UPDATE users SET avatar = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE users SET profile_image = ? WHERE id = ?");
     $stmt->bind_param("si", $avatar_url, $uid);
     $stmt->execute();
     $stmt->close();
   } else {
     $uname = $_SESSION['user_name'];
-    $stmt  = $conn->prepare("UPDATE users SET avatar = ? WHERE username = ?");
+    $stmt  = $conn->prepare("UPDATE users SET profile_image = ? WHERE username = ?");
     $stmt->bind_param("ss", $avatar_url, $uname);
     $stmt->execute();
     $stmt->close();

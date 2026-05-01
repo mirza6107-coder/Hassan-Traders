@@ -5,7 +5,20 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include('db_connect.php');
+// db_connect.php
+$host     = "localhost";
+$dbname   = "htss";   // ← CHANGE THIS
+$user     = "root"; 
+$pass     = ""; 
+
+$conn = mysqli_connect($host, $user, $pass, $dbname);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+mysqli_set_charset($conn, "utf8mb4");
+
 
 if (!isset($_SESSION['user_name']) || $_SESSION['role'] !== 'admin') {
   header("Location: ../login and signup/login.php");
@@ -20,6 +33,21 @@ $join_date = "April 2026";
 // Avatar path: stored in session or default
 $avatar_path = $_SESSION['avatar'] ?? null;
 
+if (empty($avatar_path)) {
+  // Optional: Load from DB as backup (if you have user_id in session)
+  if (!empty($_SESSION['user_id'])) {
+    $stmt = $conn->prepare("SELECT profile_image FROM users WHERE id = ?");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+      $avatar_path = $row['profile_image'];
+      $_SESSION['avatar'] = $avatar_path;   // Cache it
+    }
+    $stmt->close();
+  }
+}
+
 // Flash messages from redirects
 $success_msg = $_SESSION['success_msg'] ?? null;
 $error_msg   = $_SESSION['error_msg']   ?? null;
@@ -27,6 +55,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
 ?>
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -35,6 +64,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="profile.css" />
 </head>
+
 <body>
 
   <!-- SIDEBAR -->
@@ -312,8 +342,8 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <div class="input-wrap">
             <span class="input-icon"><i class="bi bi-person"></i></span>
             <input type="text" id="editName" name="username" class="form-input"
-                   value="<?php echo htmlspecialchars($username); ?>"
-                   placeholder="Enter your full name" required maxlength="80" />
+              value="<?php echo htmlspecialchars($username); ?>"
+              placeholder="Enter your full name" required maxlength="80" />
           </div>
         </div>
 
@@ -322,8 +352,8 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <div class="input-wrap">
             <span class="input-icon"><i class="bi bi-envelope"></i></span>
             <input type="email" id="editEmail" name="email" class="form-input"
-                   value="<?php echo htmlspecialchars($email); ?>"
-                   placeholder="Enter your email" required maxlength="120" />
+              value="<?php echo htmlspecialchars($email); ?>"
+              placeholder="Enter your email" required maxlength="120" />
           </div>
         </div>
 
@@ -364,7 +394,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <div class="input-wrap">
             <span class="input-icon"><i class="bi bi-lock"></i></span>
             <input type="password" id="currentPw" name="current_password" class="form-input"
-                   placeholder="Enter current password" required />
+              placeholder="Enter current password" required />
             <button type="button" class="toggle-pw" onclick="togglePw('currentPw', this)" tabindex="-1">
               <i class="bi bi-eye"></i>
             </button>
@@ -376,7 +406,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <div class="input-wrap">
             <span class="input-icon"><i class="bi bi-lock-fill"></i></span>
             <input type="password" id="newPw" name="new_password" class="form-input"
-                   placeholder="Min. 8 characters" required minlength="8" oninput="checkStrength(this.value)" />
+              placeholder="Min. 8 characters" required minlength="8" oninput="checkStrength(this.value)" />
             <button type="button" class="toggle-pw" onclick="togglePw('newPw', this)" tabindex="-1">
               <i class="bi bi-eye"></i>
             </button>
@@ -393,7 +423,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <div class="input-wrap">
             <span class="input-icon"><i class="bi bi-lock-fill"></i></span>
             <input type="password" id="confirmPw" name="confirm_password" class="form-input"
-                   placeholder="Repeat new password" required minlength="8" />
+              placeholder="Repeat new password" required minlength="8" />
             <button type="button" class="toggle-pw" onclick="togglePw('confirmPw', this)" tabindex="-1">
               <i class="bi bi-eye"></i>
             </button>
@@ -446,211 +476,276 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-  /* ── Modal helpers ── */
-  function openModal(backdropId, modalId) {
-    document.getElementById(backdropId).classList.add('active');
-    document.getElementById(modalId).classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeModal(backdropId, modalId) {
-    document.getElementById(backdropId).classList.remove('active');
-    document.getElementById(modalId).classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  function openEditModal()    { openModal('editModalBackdrop', 'editModal'); }
-  function closeEditModal()   { closeModal('editModalBackdrop', 'editModal'); clearMsg('editFormMsg'); }
-  function openPasswordModal(){ openModal('pwModalBackdrop', 'pwModal'); }
-  function closePasswordModal(){ closeModal('pwModalBackdrop', 'pwModal'); clearMsg('pwFormMsg'); resetStrength(); }
-  function closeAvatarModal() { closeModal('avatarModalBackdrop', 'avatarModal'); }
-
-  /* ESC key closes any open modal */
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      closeEditModal(); closePasswordModal(); closeAvatarModal();
+    /* ── Modal helpers ── */
+    function openModal(backdropId, modalId) {
+      document.getElementById(backdropId).classList.add('active');
+      document.getElementById(modalId).classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
-  });
 
-  /* ── Edit Profile Form (AJAX) ── */
-  document.getElementById('editForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('editSubmitBtn');
-    setLoading(btn, true);
-    clearMsg('editFormMsg');
-
-    fetch('update_profile.php', {
-      method: 'POST',
-      body: new FormData(this)
-    })
-    .then(r => r.json())
-    .then(data => {
-      setLoading(btn, false);
-      if (data.success) {
-        // Update UI live
-        document.getElementById('detailName').textContent  = data.username;
-        document.getElementById('detailEmail').textContent = data.email;
-        document.getElementById('heroName').textContent    = data.username;
-        document.getElementById('heroEmail').textContent   = data.email;
-        // Sync sidebar name live
-        if (typeof window.syncSidebarName === 'function') window.syncSidebarName(data.username);
-        showMsg('editFormMsg', data.message, 'success');
-        setTimeout(closeEditModal, 1400);
-      } else {
-        showMsg('editFormMsg', data.message, 'error');
-      }
-    })
-    .catch(() => { setLoading(btn, false); showMsg('editFormMsg', 'Server error. Please try again.', 'error'); });
-  });
-
-  /* ── Change Password Form (AJAX) ── */
-  document.getElementById('pwForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const np  = document.getElementById('newPw').value;
-    const cp  = document.getElementById('confirmPw').value;
-    if (np !== cp) { showMsg('pwFormMsg', 'New passwords do not match.', 'error'); return; }
-
-    const btn = document.getElementById('pwSubmitBtn');
-    setLoading(btn, true);
-    clearMsg('pwFormMsg');
-
-    fetch('change_password.php', {
-      method: 'POST',
-      body: new FormData(this)
-    })
-    .then(r => r.json())
-    .then(data => {
-      setLoading(btn, false);
-      if (data.success) {
-        showMsg('pwFormMsg', data.message, 'success');
-        document.getElementById('pwForm').reset();
-        resetStrength();
-        setTimeout(closePasswordModal, 1600);
-      } else {
-        showMsg('pwFormMsg', data.message, 'error');
-      }
-    })
-    .catch(() => { setLoading(btn, false); showMsg('pwFormMsg', 'Server error. Please try again.', 'error'); });
-  });
-
-  /* ── Avatar upload ── */
-  document.getElementById('avatarInput').addEventListener('change', function() {
-    const file = this.files[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Image must be under 2 MB.'); this.value = ''; return;
+    function closeModal(backdropId, modalId) {
+      document.getElementById(backdropId).classList.remove('active');
+      document.getElementById(modalId).classList.remove('active');
+      document.body.style.overflow = '';
     }
-    const reader = new FileReader();
-    reader.onload = e => {
-      document.getElementById('avatarCropPreview').src = e.target.result;
-      openModal('avatarModalBackdrop', 'avatarModal');
-    };
-    reader.readAsDataURL(file);
-  });
 
-  function submitAvatar() {
-    const input = document.getElementById('avatarInput');
-    if (!input.files[0]) return;
-
-    const btn = document.getElementById('avatarSaveBtn');
-    setLoading(btn, true);
-    clearMsg('avatarUploadMsg');
-
-    const fd = new FormData();
-    fd.append('avatar', input.files[0]);
-
-    fetch('update_avatar.php', { method: 'POST', body: fd })
-    .then(r => r.json())
-    .then(data => {
-      setLoading(btn, false);
-      if (data.success) {
-        // Apply new avatar everywhere
-        const src = data.avatar_url + '?t=' + Date.now();
-        applyAvatar(src);
-        showMsg('avatarUploadMsg', data.message, 'success');
-        setTimeout(closeAvatarModal, 1200);
-      } else {
-        showMsg('avatarUploadMsg', data.message, 'error');
-      }
-    })
-    .catch(() => { setLoading(btn, false); showMsg('avatarUploadMsg', 'Upload failed. Try again.', 'error'); });
-  }
-
-  function applyAvatar(src) {
-    // Hero avatar
-    const icon    = document.getElementById('avatarIcon');
-    const preview = document.getElementById('avatarPreview');
-    if (icon)    icon.style.display    = 'none';
-    if (preview) { preview.src = src; preview.style.display = 'block'; }
-    // Sync sidebar avatar live
-    if (typeof window.syncSidebarAvatar === 'function') window.syncSidebarAvatar(src);
-  }
-
-  /* ── Password strength checker ── */
-  function checkStrength(pw) {
-    const bar   = document.getElementById('strengthBar');
-    const label = document.getElementById('strengthLabel');
-    let score = 0;
-    if (pw.length >= 8)  score++;
-    if (pw.length >= 12) score++;
-    if (/[A-Z]/.test(pw)) score++;
-    if (/[0-9]/.test(pw)) score++;
-    if (/[^A-Za-z0-9]/.test(pw)) score++;
-
-    const levels = [
-      { cls: 'strength-weak',   text: 'Weak',      color: '#ef4444' },
-      { cls: 'strength-fair',   text: 'Fair',      color: '#f97316' },
-      { cls: 'strength-good',   text: 'Good',      color: '#eab308' },
-      { cls: 'strength-strong', text: 'Strong',    color: '#22c55e' },
-      { cls: 'strength-great',  text: 'Very Strong', color: '#16a34a' },
-    ];
-    const idx = Math.min(Math.max(score - 1, 0), 4);
-    const lvl = pw.length === 0 ? null : levels[idx];
-
-    if (!lvl) { bar.style.width = '0'; bar.style.background = ''; label.textContent = ''; return; }
-    bar.style.width      = ((idx + 1) / 5 * 100) + '%';
-    bar.style.background = lvl.color;
-    label.textContent    = lvl.text;
-    label.style.color    = lvl.color;
-  }
-
-  function resetStrength() {
-    document.getElementById('strengthBar').style.width = '0';
-    document.getElementById('strengthLabel').textContent = '';
-  }
-
-  /* ── Toggle password visibility ── */
-  function togglePw(inputId, btn) {
-    const inp = document.getElementById(inputId);
-    const ico = btn.querySelector('i');
-    if (inp.type === 'password') {
-      inp.type = 'text';
-      ico.className = 'bi bi-eye-slash';
-    } else {
-      inp.type = 'password';
-      ico.className = 'bi bi-eye';
+    function openEditModal() {
+      openModal('editModalBackdrop', 'editModal');
     }
-  }
 
-  /* ── Utility ── */
-  function setLoading(btn, loading) {
-    btn.querySelector('.btn-label').style.display  = loading ? 'none'         : '';
-    btn.querySelector('.btn-spinner').style.display = loading ? 'inline-flex' : 'none';
-    btn.disabled = loading;
-  }
+    function closeEditModal() {
+      closeModal('editModalBackdrop', 'editModal');
+      clearMsg('editFormMsg');
+    }
 
-  function showMsg(id, text, type) {
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className   = 'form-msg form-msg-' + type;
-    el.style.display = 'block';
-  }
+    function openPasswordModal() {
+      openModal('pwModalBackdrop', 'pwModal');
+    }
 
-  function clearMsg(id) {
-    const el = document.getElementById(id);
-    el.style.display = 'none';
-    el.textContent   = '';
-    el.className     = 'form-msg';
-  }
+    function closePasswordModal() {
+      closeModal('pwModalBackdrop', 'pwModal');
+      clearMsg('pwFormMsg');
+      resetStrength();
+    }
+
+    function closeAvatarModal() {
+      closeModal('avatarModalBackdrop', 'avatarModal');
+    }
+
+    /* ESC key closes any open modal */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeEditModal();
+        closePasswordModal();
+        closeAvatarModal();
+      }
+    });
+
+    /* ── Edit Profile Form (AJAX) ── */
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('editSubmitBtn');
+      setLoading(btn, true);
+      clearMsg('editFormMsg');
+
+      fetch('update_profile.php', {
+          method: 'POST',
+          body: new FormData(this)
+        })
+        .then(r => r.json())
+        .then(data => {
+          setLoading(btn, false);
+          if (data.success) {
+            // Update UI live
+            document.getElementById('detailName').textContent = data.username;
+            document.getElementById('detailEmail').textContent = data.email;
+            document.getElementById('heroName').textContent = data.username;
+            document.getElementById('heroEmail').textContent = data.email;
+            // Sync sidebar name live
+            if (typeof window.syncSidebarName === 'function') window.syncSidebarName(data.username);
+            showMsg('editFormMsg', data.message, 'success');
+            setTimeout(closeEditModal, 1400);
+          } else {
+            showMsg('editFormMsg', data.message, 'error');
+          }
+        })
+        .catch(() => {
+          setLoading(btn, false);
+          showMsg('editFormMsg', 'Server error. Please try again.', 'error');
+        });
+    });
+
+    /* ── Change Password Form (AJAX) ── */
+    document.getElementById('pwForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const np = document.getElementById('newPw').value;
+      const cp = document.getElementById('confirmPw').value;
+      if (np !== cp) {
+        showMsg('pwFormMsg', 'New passwords do not match.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('pwSubmitBtn');
+      setLoading(btn, true);
+      clearMsg('pwFormMsg');
+
+      fetch('change_password.php', {
+          method: 'POST',
+          body: new FormData(this)
+        })
+        .then(r => r.json())
+        .then(data => {
+          setLoading(btn, false);
+          if (data.success) {
+            showMsg('pwFormMsg', data.message, 'success');
+            document.getElementById('pwForm').reset();
+            resetStrength();
+            setTimeout(closePasswordModal, 1600);
+          } else {
+            showMsg('pwFormMsg', data.message, 'error');
+          }
+        })
+        .catch(() => {
+          setLoading(btn, false);
+          showMsg('pwFormMsg', 'Server error. Please try again.', 'error');
+        });
+    });
+
+    /* ── Avatar upload ── */
+    document.getElementById('avatarInput').addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Image must be under 2 MB.');
+        this.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('avatarCropPreview').src = e.target.result;
+        openModal('avatarModalBackdrop', 'avatarModal');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function submitAvatar() {
+      const input = document.getElementById('avatarInput');
+      if (!input.files[0]) return;
+
+      const btn = document.getElementById('avatarSaveBtn');
+      setLoading(btn, true);
+      clearMsg('avatarUploadMsg');
+
+      const fd = new FormData();
+      fd.append('avatar', input.files[0]);
+
+      fetch('update_avatar.php', {
+          method: 'POST',
+          body: fd
+        })
+        .then(r => r.json())
+        .then(data => {
+          setLoading(btn, false);
+          if (data.success) {
+            // Apply new avatar everywhere
+            const src = data.avatar_url + '?t=' + Date.now();
+            applyAvatar(src);
+            showMsg('avatarUploadMsg', data.message, 'success');
+            setTimeout(closeAvatarModal, 1200);
+          } else {
+            showMsg('avatarUploadMsg', data.message, 'error');
+          }
+        })
+        .catch(() => {
+          setLoading(btn, false);
+          showMsg('avatarUploadMsg', 'Upload failed. Try again.', 'error');
+        });
+    }
+
+    function applyAvatar(src) {
+      // Hero avatar
+      const icon = document.getElementById('avatarIcon');
+      const preview = document.getElementById('avatarPreview');
+      if (icon) icon.style.display = 'none';
+      if (preview) {
+        preview.src = src;
+        preview.style.display = 'block';
+      }
+      // Sync sidebar avatar live
+      if (typeof window.syncSidebarAvatar === 'function') window.syncSidebarAvatar(src);
+    }
+
+    /* ── Password strength checker ── */
+    function checkStrength(pw) {
+      const bar = document.getElementById('strengthBar');
+      const label = document.getElementById('strengthLabel');
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (pw.length >= 12) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+      const levels = [{
+          cls: 'strength-weak',
+          text: 'Weak',
+          color: '#ef4444'
+        },
+        {
+          cls: 'strength-fair',
+          text: 'Fair',
+          color: '#f97316'
+        },
+        {
+          cls: 'strength-good',
+          text: 'Good',
+          color: '#eab308'
+        },
+        {
+          cls: 'strength-strong',
+          text: 'Strong',
+          color: '#22c55e'
+        },
+        {
+          cls: 'strength-great',
+          text: 'Very Strong',
+          color: '#16a34a'
+        },
+      ];
+      const idx = Math.min(Math.max(score - 1, 0), 4);
+      const lvl = pw.length === 0 ? null : levels[idx];
+
+      if (!lvl) {
+        bar.style.width = '0';
+        bar.style.background = '';
+        label.textContent = '';
+        return;
+      }
+      bar.style.width = ((idx + 1) / 5 * 100) + '%';
+      bar.style.background = lvl.color;
+      label.textContent = lvl.text;
+      label.style.color = lvl.color;
+    }
+
+    function resetStrength() {
+      document.getElementById('strengthBar').style.width = '0';
+      document.getElementById('strengthLabel').textContent = '';
+    }
+
+    /* ── Toggle password visibility ── */
+    function togglePw(inputId, btn) {
+      const inp = document.getElementById(inputId);
+      const ico = btn.querySelector('i');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        ico.className = 'bi bi-eye-slash';
+      } else {
+        inp.type = 'password';
+        ico.className = 'bi bi-eye';
+      }
+    }
+
+    /* ── Utility ── */
+    function setLoading(btn, loading) {
+      btn.querySelector('.btn-label').style.display = loading ? 'none' : '';
+      btn.querySelector('.btn-spinner').style.display = loading ? 'inline-flex' : 'none';
+      btn.disabled = loading;
+    }
+
+    function showMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = 'form-msg form-msg-' + type;
+      el.style.display = 'block';
+    }
+
+    function clearMsg(id) {
+      const el = document.getElementById(id);
+      el.style.display = 'none';
+      el.textContent = '';
+      el.className = 'form-msg';
+    }
   </script>
 </body>
+
 </html>

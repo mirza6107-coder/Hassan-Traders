@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_name'] = $row['fullname']; // Fixed: Use 'Fullname' to match your DB
             $_SESSION['role']      = $row['role'];     // Ensure this column exists in your DB
             $_SESSION['email']     = $row['Email'];    // Recommended for profile.php
+            $_SESSION['avatar']    = $row['profile_image'] ?? null;
 
             if ($_SESSION['role'] == 'admin') {
                 header("Location: ../Admin-Panel/dashboard.php");
