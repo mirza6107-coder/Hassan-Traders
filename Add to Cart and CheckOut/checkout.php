@@ -222,15 +222,15 @@
                 </div>
                 <div id="pay-detail-jazzcash" class="co-pay-detail" style="display:none;">
                   <div class="co-pay-detail-grid">
-                    <div><span class="co-detail-label">Name</span><span class="co-detail-label">Umar Jalal</span></div>
-                    <div><span class="co-detail-label">Number</span><span class="co-detail-val">0321-7703083</span></div>
+                    <div><span class="co-detail-label">Name</span><span class="co-detail-val">Hassan Jalal</span></div>
+                    <div><span class="co-detail-label">Number</span><span class="co-detail-val">0300-0687080</span></div>
                   </div>
                 </div>
                 <div id="pay-detail-bank" class="co-pay-detail" style="display:none;">
                   <div class="co-pay-detail-grid">
-                    <div><span class="co-detail-label">Bank</span><span class="co-detail-val">HBL</span></div>
-                    <div><span class="co-detail-label">Account</span><span class="co-detail-val">1234-5678-9012</span></div>
-                    <div><span class="co-detail-label">Account Title</span><span class="co-detail-val">Hassan Traders</span></div>
+                    <div><span class="co-detail-label">Bank</span><span class="co-detail-val">Alfalah </span></div>
+                    <div><span class="co-detail-label">Account</span><span class="co-detail-val">5534-5000587637</span></div>
+                    <div><span class="co-detail-label">Account Title</span><span class="co-detail-val">Hassan Jalal</span></div>
                   </div>
                 </div>
               </div>
