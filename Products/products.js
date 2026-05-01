@@ -48,11 +48,6 @@ function updateCount() {
   document.getElementById("resultCount").textContent = "";
 }
 
-document.getElementById("productSearch").addEventListener("keyup", filterCards);
-document
-  .getElementById("productSearch")
-  .addEventListener("search", filterCards);
-
 // ── Cart icon count
 function updateCartIcon() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -61,155 +56,95 @@ function updateCartIcon() {
 }
 document.addEventListener("DOMContentLoaded", updateCartIcon);
 
-// ── Add to cart & redirect
-function addToCartAndGo(id, name, price, image) {
+// ══════════════════════════════════════════
+//  UPDATED ADD TO CART FUNCTIONS
+// ══════════════════════════════════════════
+
+function addToCart(id, name, price, image) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const product = { id, name, price: parseFloat(price), image, quantity: 1 };
+
   const index = cart.findIndex((item) => item.id === id);
   if (index > -1) {
     cart[index].quantity += 1;
   } else {
     cart.push(product);
   }
+
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartIcon();
+
+  // Show success feedback
+  showAddToCartToast(name);
+}
+
+function addToCartAndGo(id, name, price, image) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const product = { id, name, price: parseFloat(price), image, quantity: 1 };
+
+  const index = cart.findIndex((item) => item.id === id);
+  if (index > -1) {
+    cart[index].quantity += 1;
+  } else {
+    cart.push(product);
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartIcon();
+
+  // Redirect to cart (used in Quick View)
   window.location.href = "../Add to Cart and CheckOut/Cart.php";
 }
 
-// ══════════════════════════════════════════
-//  QUICK VIEW MODAL
-// ══════════════════════════════════════════
+// Toast notification when product is added from "Buy" button
+function showAddToCartToast(productName) {
+  // Remove existing toast if any
+  let existing = document.getElementById("cart-toast");
+  if (existing) existing.remove();
 
-const qvOverlay = document.getElementById("qvOverlay");
-const qvContent = document.getElementById("qvContent");
+  const toast = document.createElement("div");
+  toast.id = "cart-toast";
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: #1a1a1a;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    font-family: var(--font);
+    font-size: 14px;
+    animation: slideIn 0.3s ease;
+  `;
 
-// Open modal and load product
-function openQuickView(id, name, price, image) {
-  qvOverlay.classList.add("open");
-  document.body.style.overflow = "hidden";
+  toast.innerHTML = `
+    <i class="bi bi-check-circle-fill" style="color:#22c55e;font-size:1.3rem;"></i>
+    <div>
+      <strong>${productName}</strong><br>
+      <small>Added to cart</small>
+    </div>
+  `;
 
-  // Show skeleton loader
-  qvContent.innerHTML = `
-    <div class="qv-skeleton">
-      <div class="qv-skel-box" style="height:300px;border-radius:16px;"></div>
-    </div>`;
+  document.body.appendChild(toast);
 
-  // Fetch product details
-  fetch(`product-quickview.php?id=${id}`)
-    .then((r) => r.json())
-    .then((p) => {
-      if (!p.success) {
-        qvContent.innerHTML = renderQvError();
-        return;
-      }
-      qvContent.innerHTML = renderQvContent(p);
-    })
-    .catch(() => {
-      qvContent.innerHTML = renderQvError();
-    });
+  // Auto hide after 3 seconds
+  setTimeout(() => {
+    toast.style.transition = "all 0.3s ease";
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(20px)";
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
-function closeQuickView() {
-  qvOverlay.classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-// Close on overlay background click
-qvOverlay.addEventListener("click", (e) => {
-  if (e.target === qvOverlay) closeQuickView();
-});
-
-// Close on Escape
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeQuickView();
-});
-
-function renderQvContent(p) {
-  const imgSrc = `../Admin-Panel/uploads/${p.image}`;
-  const fallback = `../Images/no-image.png`;
-  const hasOrig = p.orignalprice > 0 && p.orignalprice !== p.price;
-
-  let stockHtml;
-  if (p.stock === 0) {
-    stockHtml = `<span class="qv-stock-badge qv-stock-out"><i class="bi bi-x-circle-fill"></i> Out of Stock</span>`;
-  } else if (p.stock < 20) {
-    stockHtml = `<span class="qv-stock-badge qv-stock-low"><i class="bi bi-exclamation-circle-fill"></i> Low Stock (${p.stock} left)</span>`;
-  } else {
-    stockHtml = `<span class="qv-stock-badge qv-stock-ok"><i class="bi bi-check-circle-fill"></i> In Stock</span>`;
+// Close toast on click
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#cart-toast")) {
+    const toast = document.getElementById("cart-toast");
+    if (toast) toast.remove();
   }
-
-  const descHtml = p.description
-    ? `<p style="font-size:13.5px;color:#6B6B6B;line-height:1.7;margin-bottom:20px;">${p.description}</p>`
-    : "";
-
-  const jsName = p.name.replace(/'/g, "\\'");
-  const cartBtn =
-    p.stock > 0
-      ? `<button class="qv-btn-primary" onclick="addToCartAndGo(${p.id}, '${jsName}', ${p.price}, '${p.image}')">
-         <i class="bi bi-cart-plus-fill"></i> Add to Cart
-       </button>`
-      : `<button class="qv-btn-primary" disabled style="opacity:0.5;cursor:not-allowed;">
-         <i class="bi bi-x-circle"></i> Out of Stock
-       </button>`;
-
-  return `
-    <div class="qv-inner">
-      <div class="qv-img-side">
-        <img src="${imgSrc}" alt="${p.name}" onerror="this.src='${fallback}'">
-        ${p.category ? `<span class="qv-img-badge">${p.category}</span>` : ""}
-      </div>
-      <div class="qv-info-side">
-        ${p.brand ? `<div class="qv-brand">${p.brand}</div>` : ""}
-        <div class="qv-name">${p.name}</div>
-
-        <div class="qv-price-row">
-          <div class="qv-price">Rs. ${Number(p.price).toLocaleString("en-PK")}</div>
-          
-        </div>
-
-        ${descHtml}
-
-        <hr class="qv-divider">
-
-        <div class="qv-meta">
-          ${
-            p.category
-              ? `
-          <div class="qv-meta-row">
-            <span class="qv-meta-label">Category</span>
-            <span class="qv-meta-value">${p.category}</span>
-          </div>`
-              : ""
-          }
-          ${
-            p.brand
-              ? `
-          <div class="qv-meta-row">
-            <span class="qv-meta-label">Brand</span>
-            <span class="qv-meta-value">${p.brand}</span>
-          </div>`
-              : ""
-          }
-          <div class="qv-meta-row">
-            <span class="qv-meta-label">Stock</span>
-            ${stockHtml}
-          </div>
-        </div>
-
-        <hr class="qv-divider">
-
-        <div class="qv-actions">
-          ${cartBtn}
-          
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderQvError() {
-  return `
-    <div style="padding:60px;text-align:center;color:#6B6B6B;">
-      <i class="bi bi-exclamation-circle" style="font-size:2.5rem;display:block;margin-bottom:14px;opacity:0.4;"></i>
-      <p>Could not load product details.</p>
-    </div>`;
-}
+});

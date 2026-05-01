@@ -182,7 +182,7 @@
           <div class='card-footer-row d-flex justify-content-between align-items-center mt-2'>
             <div class='card-price'><span>Rs.</span> {$priceDisplay}</div>
             <button class='btn btn-sm btn-danger rounded-pill px-3'
-              onclick=\"addToCartAndGo({$id}, '{$jsName}', {$priceRaw}, '{$img}')\">
+              onclick=\"addToCart({$id}, '{$jsName}', {$priceRaw}, '{$img}')\">
               <i class='bi bi-cart-plus'></i> Buy
             </button>
           </div>
