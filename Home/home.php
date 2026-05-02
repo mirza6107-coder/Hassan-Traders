@@ -161,7 +161,7 @@
                 <a href="../Products/Products.php" class="hm-btn-primary"
                   >Explore PPR-C Range <i class="bi bi-arrow-right ms-1"></i
                 ></a>
-                <a href="../Contact us/contactus.html" class="hm-btn-ghost"
+                <a href="../Contact us/contactus.php" class="hm-btn-ghost"
                   >Get a Quote</a
                 >
               </div>
@@ -243,7 +243,7 @@
                 <a href="../Products/Products.php" class="hm-btn-primary"
                   >Browse Water Tanks <i class="bi bi-arrow-right ms-1"></i
                 ></a>
-                <a href="../Contact us/contactus.html" class="hm-btn-ghost"
+                <a href="../Contact us/contactus.php" class="hm-btn-ghost"
                   >Get a Quote</a
                 >
               </div>
@@ -279,7 +279,7 @@
                 <a href="../Products/Products.php" class="hm-btn-primary"
                   >See Electrical Range <i class="bi bi-arrow-right ms-1"></i
                 ></a>
-                <a href="../Contact us/contactus.html" class="hm-btn-ghost"
+                <a href="../Contact us/contactus.php" class="hm-btn-ghost"
                   >Get a Quote</a
                 >
               </div>
@@ -646,7 +646,7 @@
             expert guidance on every product we carry.
           </p>
           <div class="hm-cta-actions">
-            <a href="../Contact us/contactus.html" class="hm-cta-btn-primary"
+            <a href="../Contact us/contactus.php" class="hm-cta-btn-primary"
               ><i class="bi bi-telephone-fill me-2"></i> Contact Us Now</a
             >
             <a href="../Products/Products.php" class="hm-cta-btn-ghost"
@@ -707,19 +707,19 @@
           <div class="col-lg-2 col-md-6">
             <h5 class="fw-bold mb-4">Explore</h5>
             <ul class="list-unstyled footer-links">
-              <li><a href="../Home/home.html">Home</a></li>
-              <li><a href="../About us/aboutus.html">About Us</a></li>
-              <li><a href="../Products/Products.html">Our Products</a></li>
-              <li><a href="../Contact us/contactus.html">Support</a></li>
+              <li><a href="../Home/home.php">Home</a></li>
+              <li><a href="../About us/aboutus.php">About Us</a></li>
+              <li><a href="../Products/Products.php">Our Products</a></li>
+              <li><a href="../Contact us/contactus.php">Support</a></li>
             </ul>
           </div>
           <div class="col-lg-2 col-md-6">
             <h5 class="fw-bold mb-4">Products</h5>
             <ul class="list-unstyled footer-links">
-              <li><a href="../Products/Products.html">PPR-C Pipes</a></li>
-              <li><a href="../Products/Products.html">U-PVC Fittings</a></li>
-              <li><a href="../Products/Products.html">Water Tanks</a></li>
-              <li><a href="../Products/Products.html">Bath Sets</a></li>
+              <li><a href="../Products/Products.php">PPR-C Pipes</a></li>
+              <li><a href="../Products/Products.php">U-PVC Fittings</a></li>
+              <li><a href="../Products/Products.php">Water Tanks</a></li>
+              <li><a href="../Products/Products.php">Bath Sets</a></li>
             </ul>
           </div>
           <div class="col-lg-4 col-md-6">
