@@ -1,7 +1,20 @@
 <?php
+session_start();
 header('Content-Type: application/json');
 
-$conn = mysqli_connect('localhost', 'root', '', 'htss');
+// db_connect.php
+$host     = "localhost";
+$dbname   = "htss";   // ← CHANGE THIS
+$user     = "root"; 
+$pass     = ""; 
+
+$conn = mysqli_connect($host, $user, $pass, $dbname);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+mysqli_set_charset($conn, "utf8mb4");
 
 if (!$conn) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed']);
@@ -15,7 +28,6 @@ if (!$data) {
     exit;
 }
 
-// Sanitize inputs
 $name          = trim($data['name']          ?? '');
 $phone         = trim($data['phone']         ?? '');
 $email         = trim($data['email']         ?? '');
@@ -25,7 +37,6 @@ $paymentMethod = trim($data['paymentMethod'] ?? 'cod');
 $total         = floatval($data['total']     ?? 0);
 $cart          = $data['cart']               ?? [];
 
-// Basic validation
 if (!$name || !$phone || !$address || empty($cart)) {
     echo json_encode(['success' => false, 'message' => 'Missing required fields']);
     exit;
@@ -34,49 +45,52 @@ if (!$name || !$phone || !$address || empty($cart)) {
 mysqli_begin_transaction($conn);
 
 try {
-
     // 1. Insert Customer
-    //    Table: customers (id, name, phone, email, address, city, joined)
-    //    'joined' has a DEFAULT of NOW() so we don't need to pass it.
+    // customers table columns: id, name, phone, email, address, city, joined
     $stmt = mysqli_prepare($conn,
         "INSERT INTO customers (name, phone, email, address, city) VALUES (?, ?, ?, ?, ?)"
     );
     if (!$stmt) throw new Exception('Prepare failed (customers): ' . mysqli_error($conn));
-
     mysqli_stmt_bind_param($stmt, 'sssss', $name, $phone, $email, $address, $city);
     mysqli_stmt_execute($stmt);
     $customerId = mysqli_insert_id($conn);
     mysqli_stmt_close($stmt);
 
     // 2. Create Order
-    //    Table: orders (id, customer_id, total_amount, payment_method, status, order_date)
-    //    'status' defaults to 'pending' and 'order_date' defaults to NOW().
+    // orders table columns: id, customer_id, total_amount, status_ENUM, payment_method, order_date
+    // status_ENUM defaults to 'Pending' — we don't need to pass it
     $stmt = mysqli_prepare($conn,
         "INSERT INTO orders (customer_id, total_amount, payment_method) VALUES (?, ?, ?)"
     );
     if (!$stmt) throw new Exception('Prepare failed (orders): ' . mysqli_error($conn));
-
     mysqli_stmt_bind_param($stmt, 'ids', $customerId, $total, $paymentMethod);
     mysqli_stmt_execute($stmt);
     $orderId = mysqli_insert_id($conn);
     mysqli_stmt_close($stmt);
 
     // 3. Insert Order Items
-    //    Table: order_items (id, order_id, product_name, price, quantity)
+    // order_items columns: id, order_id, product_name, quantity, price
     $stmt = mysqli_prepare($conn,
         "INSERT INTO order_items (order_id, product_name, price, quantity) VALUES (?, ?, ?, ?)"
     );
     if (!$stmt) throw new Exception('Prepare failed (order_items): ' . mysqli_error($conn));
-
     foreach ($cart as $item) {
-        $productName = trim($item['name']     ?? 'Unknown');
-        $price       = floatval($item['price']    ?? 0);
-        $quantity    = intval($item['quantity'] ?? 1);
-
+        $productName = trim($item['name']      ?? 'Unknown');
+        $price       = floatval($item['price'] ?? 0);
+        $quantity    = intval($item['quantity']?? 1);
         mysqli_stmt_bind_param($stmt, 'isdi', $orderId, $productName, $price, $quantity);
         mysqli_stmt_execute($stmt);
     }
     mysqli_stmt_close($stmt);
+
+    // 4. Clear user's DB cart after successful order
+    if (isset($_SESSION['user_id'])) {
+        $userId    = (int)$_SESSION['user_id'];
+        $clearStmt = mysqli_prepare($conn, "DELETE FROM user_cart WHERE user_id = ?");
+        mysqli_stmt_bind_param($clearStmt, "i", $userId);
+        mysqli_stmt_execute($clearStmt);
+        mysqli_stmt_close($clearStmt);
+    }
 
     mysqli_commit($conn);
 
@@ -92,4 +106,3 @@ try {
 }
 
 mysqli_close($conn);
-?>

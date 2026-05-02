@@ -4,12 +4,8 @@ ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-
 header('Content-Type: application/json');
 
-// ── db_connect.php is one level up from 'Add to Cart and CheckOut/' ──
-// Folder structure: htss/db_connect.php
-//                   htss/Add to Cart and CheckOut/save-cart.php
 // db_connect.php
 $host     = "localhost";
 $dbname   = "htss";   // ← CHANGE THIS
@@ -23,19 +19,16 @@ if (!$conn) {
 }
 
 mysqli_set_charset($conn, "utf8mb4");
-// ── Check DB connection ───────────────────────────────────────
 if (!$conn || mysqli_connect_errno()) {
     echo json_encode(['success' => false, 'reason' => 'db_connection_failed', 'error' => mysqli_connect_error()]);
     exit;
 }
 
-// ── Must be logged in ─────────────────────────────────────────
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'reason' => 'not_logged_in']);
     exit;
 }
 
-// ── Parse JSON body ───────────────────────────────────────────
 $raw  = file_get_contents('php://input');
 $data = json_decode($raw, true);
 
@@ -44,6 +37,9 @@ if (!$data) {
     exit;
 }
 
+// ── What action is being requested? ──────────────────────────
+// action: 'add' | 'update' | 'remove' | 'clear' | 'sync'
+$action    = trim($data['action']    ?? 'add');
 $userId    = (int)$_SESSION['user_id'];
 $productId = (int)($data['id']       ?? 0);
 $name      = trim($data['name']      ?? '');
@@ -51,12 +47,7 @@ $price     = (float)($data['price']  ?? 0);
 $image     = trim($data['image']     ?? '');
 $quantity  = (int)($data['quantity'] ?? 1);
 
-if (!$productId) {
-    echo json_encode(['success' => false, 'reason' => 'invalid_product_id', 'received' => $data]);
-    exit;
-}
-
-// ── Auto-create table if it doesn't exist yet ─────────────────
+// ── Auto-create table if needed ───────────────────────────────
 mysqli_query($conn, "
     CREATE TABLE IF NOT EXISTS user_cart (
         id          INT            AUTO_INCREMENT PRIMARY KEY,
@@ -72,28 +63,92 @@ mysqli_query($conn, "
     )
 ");
 
-// ── Insert or increment quantity ──────────────────────────────
-$stmt = mysqli_prepare($conn, "
-    INSERT INTO user_cart (user_id, product_id, name, price, image, quantity)
-    VALUES (?, ?, ?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
-");
+// ── Handle each action ────────────────────────────────────────
 
-if (!$stmt) {
-    echo json_encode(['success' => false, 'reason' => 'prepare_failed', 'error' => mysqli_error($conn)]);
+// ADD — insert or increment
+if ($action === 'add') {
+    if (!$productId) {
+        echo json_encode(['success' => false, 'reason' => 'invalid_product_id']);
+        exit;
+    }
+    $stmt = mysqli_prepare($conn, "
+        INSERT INTO user_cart (user_id, product_id, name, price, image, quantity)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+    ");
+    mysqli_stmt_bind_param($stmt, "iisdsi", $userId, $productId, $name, $price, $image, $quantity);
+    mysqli_stmt_execute($stmt);
+    echo json_encode(['success' => true, 'action' => 'add', 'product_id' => $productId]);
     exit;
 }
 
-mysqli_stmt_bind_param($stmt, "iisdsi", $userId, $productId, $name, $price, $image, $quantity);
-
-if (!mysqli_stmt_execute($stmt)) {
-    echo json_encode(['success' => false, 'reason' => 'execute_failed', 'error' => mysqli_stmt_error($stmt)]);
+// UPDATE — set exact quantity (called when user changes qty in cart)
+if ($action === 'update') {
+    if (!$productId || $quantity < 1) {
+        echo json_encode(['success' => false, 'reason' => 'invalid_data']);
+        exit;
+    }
+    $stmt = mysqli_prepare($conn, "
+        UPDATE user_cart SET quantity = ? WHERE user_id = ? AND product_id = ?
+    ");
+    mysqli_stmt_bind_param($stmt, "iii", $quantity, $userId, $productId);
+    mysqli_stmt_execute($stmt);
+    echo json_encode(['success' => true, 'action' => 'update', 'product_id' => $productId, 'quantity' => $quantity]);
     exit;
 }
 
-echo json_encode([
-    'success'    => true,
-    'user_id'    => $userId,
-    'product_id' => $productId,
-    'quantity'   => $quantity,
-]);
+// REMOVE — delete one item
+if ($action === 'remove') {
+    if (!$productId) {
+        echo json_encode(['success' => false, 'reason' => 'invalid_product_id']);
+        exit;
+    }
+    $stmt = mysqli_prepare($conn, "
+        DELETE FROM user_cart WHERE user_id = ? AND product_id = ?
+    ");
+    mysqli_stmt_bind_param($stmt, "ii", $userId, $productId);
+    mysqli_stmt_execute($stmt);
+    echo json_encode(['success' => true, 'action' => 'remove', 'product_id' => $productId]);
+    exit;
+}
+
+// CLEAR — empty the whole cart (called after order is placed)
+if ($action === 'clear') {
+    $stmt = mysqli_prepare($conn, "DELETE FROM user_cart WHERE user_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_execute($stmt);
+    echo json_encode(['success' => true, 'action' => 'clear']);
+    exit;
+}
+
+// SYNC — replace entire DB cart with whatever is in localStorage
+// Useful as a fallback to make sure DB always matches the browser
+if ($action === 'sync') {
+    $items = $data['items'] ?? [];
+    // Clear existing cart for this user
+    $del = mysqli_prepare($conn, "DELETE FROM user_cart WHERE user_id = ?");
+    mysqli_stmt_bind_param($del, "i", $userId);
+    mysqli_stmt_execute($del);
+
+    if (!empty($items)) {
+        $ins = mysqli_prepare($conn, "
+            INSERT INTO user_cart (user_id, product_id, name, price, image, quantity)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        foreach ($items as $item) {
+            $pid = (int)($item['id']       ?? 0);
+            $nm  = trim($item['name']      ?? '');
+            $pr  = (float)($item['price']  ?? 0);
+            $img = trim($item['image']     ?? '');
+            $qty = (int)($item['quantity'] ?? 1);
+            if ($pid > 0) {
+                mysqli_stmt_bind_param($ins, "iisdsi", $userId, $pid, $nm, $pr, $img, $qty);
+                mysqli_stmt_execute($ins);
+            }
+        }
+    }
+    echo json_encode(['success' => true, 'action' => 'sync', 'count' => count($items)]);
+    exit;
+}
+
+echo json_encode(['success' => false, 'reason' => 'unknown_action', 'action' => $action]);

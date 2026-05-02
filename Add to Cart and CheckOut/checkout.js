@@ -156,8 +156,21 @@ async function handlePlaceOrder() {
     const result = await response.json();
 
     if (result.success) {
-      // ── Clear cart ──
+      // ── Clear localStorage cart ──
       localStorage.removeItem('cart');
+
+      // ── Clear DB cart too (place_order.php also does this server-side,
+      //    but this is a belt-and-suspenders client-side call) ──
+      if (typeof SAVE_CART_URL !== 'undefined') {
+        fetch(SAVE_CART_URL, {
+          method: 'POST', credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'clear' })
+        }).catch(() => {});
+      }
+
+      // ── Update badge ──
+      if (typeof updateCartIcon === 'function') updateCartIcon();
 
       // ── Show success overlay ──
       const overlay = document.getElementById('successOverlay');

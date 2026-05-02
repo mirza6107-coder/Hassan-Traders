@@ -13,6 +13,7 @@ if (!$conn) {
 }
 
 mysqli_set_charset($conn, "utf8mb4");
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: login.php");
     exit;
@@ -21,19 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $email    = trim($_POST['emailaddress'] ?? '');
 $password = $_POST['password'] ?? '';
 
-// ── Basic validation ──────────────────────────────────────────
 if (!$email || !$password) {
     $_SESSION['auth_error'] = "Please fill in all fields.";
     header("Location: login.php");
     exit;
 }
 
-// ── Fetch user ────────────────────────────────────────────────
 $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ? LIMIT 1");
 mysqli_stmt_bind_param($stmt, "s", $email);
 mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$user   = mysqli_fetch_assoc($result);
+$user = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 
 if (!$user || !password_verify($password, $user['password'])) {
     $_SESSION['auth_error'] = "Invalid email or password.";
@@ -47,7 +45,7 @@ $_SESSION['user_name']  = $user['fullname'];
 $_SESSION['user_email'] = $user['email'];
 $_SESSION['role']       = $user['role'];
 
-// ── Load this user's cart from DB into session ────────────────
+// ── Load this user's saved cart from DB ──────────────────────
 $cartStmt = mysqli_prepare($conn, "SELECT * FROM user_cart WHERE user_id = ?");
 mysqli_stmt_bind_param($cartStmt, "i", $user['id']);
 mysqli_stmt_execute($cartStmt);
@@ -65,7 +63,6 @@ while ($row = mysqli_fetch_assoc($cartResult)) {
 }
 $_SESSION['cart_on_login'] = json_encode($cartForJS);
 
-// ── Redirect — cart-init.php on the landing page will load the cart
 if ($user['role'] === 'admin') {
     header("Location: ../Admin-Panel/dashboard.php");
 } else {

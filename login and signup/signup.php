@@ -23,11 +23,10 @@ $fullname = trim($_POST['fullname']     ?? '');
 $email    = trim($_POST['emailaddress'] ?? '');
 $password = $_POST['password']          ?? '';
 
-// ── Validation ────────────────────────────────────────────────
 $errors = [];
-if (!$fullname)                                      $errors[] = "Full name is required.";
-if (!filter_var($email, FILTER_VALIDATE_EMAIL))      $errors[] = "A valid email is required.";
-if (strlen($password) < 6)                           $errors[] = "Password must be at least 6 characters.";
+if (!$fullname)                                  $errors[] = "Full name is required.";
+if (!filter_var($email, FILTER_VALIDATE_EMAIL))  $errors[] = "A valid email is required.";
+if (strlen($password) < 6)                       $errors[] = "Password must be at least 6 characters.";
 
 if ($errors) {
     $_SESSION['auth_error'] = implode(' ', $errors);
@@ -35,7 +34,6 @@ if ($errors) {
     exit;
 }
 
-// ── Check if email already taken ─────────────────────────────
 $check = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? LIMIT 1");
 mysqli_stmt_bind_param($check, "s", $email);
 mysqli_stmt_execute($check);
@@ -47,20 +45,15 @@ if (mysqli_stmt_num_rows($check) > 0) {
     exit;
 }
 
-// ── Insert — columns: fullname, email, password, role, profile_image
 $hashed       = password_hash($password, PASSWORD_DEFAULT);
-$role         = 'user';                  // default role matches your DB
-$profileImage = 'default_avatar.png';   // matches your existing rows
+$role         = 'user';
+$profileImage = 'default_avatar.png';
 
-$insert = mysqli_prepare($conn, "
-    INSERT INTO users (fullname, email, password, role, profile_image)
-    VALUES (?, ?, ?, ?, ?)
-");
+$insert = mysqli_prepare($conn, "INSERT INTO users (fullname, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)");
 mysqli_stmt_bind_param($insert, "sssss", $fullname, $email, $hashed, $role, $profileImage);
 mysqli_stmt_execute($insert);
 $newUserId = mysqli_insert_id($conn);
 
-// ── Auto-login after signup ───────────────────────────────────
 $_SESSION['user_id']       = $newUserId;
 $_SESSION['user_name']     = $fullname;
 $_SESSION['user_email']    = $email;

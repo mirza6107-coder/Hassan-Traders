@@ -1,11 +1,18 @@
 /* ══════════════════════════════════════════════
    HASSAN TRADERS — CART PAGE SCRIPTS
-   cart.js
+   cart.js  (with DB sync)
 ══════════════════════════════════════════════ */
+
+// SAVE_CART_URL is defined in navbar.js which loads first
+// Fallback in case this page loads without navbar.js
+if (typeof SAVE_CART_URL === 'undefined') {
+  var SAVE_CART_URL = '/Add to Cart and CheckOut/save-cart.php';
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   renderCart();
-  updateNavbarCount();
+  // navbar.js handles updateCartIcon on load
+  if (typeof updateCartIcon === 'function') updateCartIcon();
 });
 
 /* ──────────────────────────────────────────
@@ -19,7 +26,6 @@ function renderCart() {
 
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  /* ── Empty state ── */
   if (cart.length === 0) {
     const emptyHTML = `
       <div class="ct-empty">
@@ -27,13 +33,10 @@ function renderCart() {
         <p>Your cart is empty — add some products first.</p>
         <a href="../Products/Products.php"><i class="bi bi-arrow-left me-1"></i> Go Shopping</a>
       </div>`;
-
-    if (desktopBody) {
-      desktopBody.innerHTML = `<tr><td colspan="5">${emptyHTML}</td></tr>`;
-    }
-    if (mobileList) mobileList.innerHTML = emptyHTML;
-    if (subtotalEl) subtotalEl.textContent = '0';
-    if (totalEl)    totalEl.textContent = '0';
+    if (desktopBody) desktopBody.innerHTML = `<tr><td colspan="5">${emptyHTML}</td></tr>`;
+    if (mobileList)  mobileList.innerHTML  = emptyHTML;
+    if (subtotalEl)  subtotalEl.textContent = '0';
+    if (totalEl)     totalEl.textContent    = '0';
     return;
   }
 
@@ -45,10 +48,9 @@ function renderCart() {
     const lineTotal = item.price * item.quantity;
     total += lineTotal;
 
-    const imgSrc = `../Admin-Panel/uploads/${item.image}`;
+    const imgSrc  = `../Admin-Panel/uploads/${item.image}`;
     const fallback = `onerror="this.src='../Images/no-image.png'"`;
 
-    /* Desktop row */
     desktopHTML += `
       <tr id="row-${index}">
         <td>
@@ -75,7 +77,6 @@ function renderCart() {
         </td>
       </tr>`;
 
-    /* Mobile card */
     mobileHTML += `
       <div class="ct-mobile-card" id="mob-${index}">
         <div class="ct-mobile-thumb">
@@ -106,49 +107,77 @@ function renderCart() {
 }
 
 /* ──────────────────────────────────────────
-   UPDATE NAVBAR CART BADGE
+   HELPER: send action to save-cart.php
 ────────────────────────────────────────── */
-function updateNavbarCount() {
-  const cart  = JSON.parse(localStorage.getItem('cart')) || [];
-  const badge = document.getElementById('cart-count');
-  if (badge) badge.textContent = cart.length;
+function _dbCart(payload) {
+  fetch(SAVE_CART_URL, {
+    method:      'POST',
+    credentials: 'same-origin',
+    headers:     { 'Content-Type': 'application/json' },
+    body:        JSON.stringify(payload),
+  })
+  .then(r => r.json())
+  .then(res => console.log('[Cart DB]', res))
+  .catch(err => console.warn('[Cart DB] failed:', err));
 }
 
 /* ──────────────────────────────────────────
-   REMOVE ITEM
+   REMOVE ITEM — updates localStorage + DB
 ────────────────────────────────────────── */
 function removeItem(index) {
-  /* Animate out */
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  // Get the product id BEFORE removing so we can tell the DB
+  const removedItem = cart[index];
+  const productId   = removedItem ? removedItem.id : null;
+
+  // Animate out
   const row = document.getElementById('row-' + index);
   const mob = document.getElementById('mob-' + index);
   if (row) row.classList.add('removing');
   if (mob) {
-    mob.style.opacity = '0';
-    mob.style.transform = 'translateX(16px)';
+    mob.style.opacity    = '0';
+    mob.style.transform  = 'translateX(16px)';
     mob.style.transition = 'opacity 0.3s, transform 0.3s';
   }
 
   setTimeout(function () {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
+
+    // ── Sync to DB ──
+    if (productId) {
+      _dbCart({ action: 'remove', id: productId });
+    }
+
     renderCart();
-    updateNavbarCount();
+    if (typeof updateCartIcon === 'function') updateCartIcon();
   }, 300);
 }
 
 /* ──────────────────────────────────────────
-   CHANGE QUANTITY
+   CHANGE QUANTITY — updates localStorage + DB
 ────────────────────────────────────────── */
 function changeQty(index, delta) {
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
   cart[index].quantity += delta;
 
-  if (cart[index].quantity <= 0) {
+  const productId  = cart[index].id;
+  const newQty     = cart[index].quantity;
+
+  if (newQty <= 0) {
+    // Remove entirely
+    const removedId = cart[index].id;
     cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    _dbCart({ action: 'remove', id: removedId });
+  } else {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    // ── Sync new quantity to DB ──
+    _dbCart({ action: 'update', id: productId, quantity: newQty });
   }
 
-  localStorage.setItem('cart', JSON.stringify(cart));
   renderCart();
-  updateNavbarCount();
+  if (typeof updateCartIcon === 'function') updateCartIcon();
 }
