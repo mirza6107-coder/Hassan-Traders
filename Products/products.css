@@ -30,53 +30,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─────────── NAVBAR ─────────── */
-.premium-navbar {
-  background: var(--cream);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 0;
-  transition: box-shadow 0.3s;
-}
-.premium-navbar.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.08); }
-.logo-img { height: 48px; }
-
-.nav-link {
-  font-family: var(--font);
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  color: var(--text);
-  padding: 8px 16px;
-  border-radius: 50px;
-  transition: background 0.2s, color 0.2s;
-}
-.nav-link:hover { background: #F2EDE8; color: var(--primary); }
-.nav-link.current { color: var(--primary); font-weight: 700; }
-
-.btn-premium {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  font-family: var(--font);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  padding: 10px 24px;
-  border-radius: 50px;
-  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
-  cursor: pointer;
-}
-.btn-premium:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(200,16,46,0.28);
-  color: #fff;
-}
-
 /* ─────────── HERO ─────────── */
 .products-hero {
   background: #1A1A1A;
-  margin-top: 76px;
   padding: 80px 0 70px;
   position: relative;
   overflow: hidden;

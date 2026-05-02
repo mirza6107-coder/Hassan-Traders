@@ -1,4 +1,9 @@
-<?php session_start(); ?>
+<?php
+session_start();
+$authError  = $_SESSION['auth_error'] ?? '';
+unset($_SESSION['auth_error']);
+$openSignup = isset($_GET['tab']) && $_GET['tab'] === 'signup';
+?>
 <!doctype html>
 <html lang="en">
 
@@ -70,7 +75,7 @@
                 <?php echo htmlspecialchars($_SESSION['user_name']); ?>
               </button>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                <li><a class="dropdown-item" href="../login and signup/logout.php">Logout</a></li>
               </ul>
             </div>
           <?php else: ?>
@@ -340,6 +345,36 @@
   </div>
 
   <script src="login.js"></script>
+
+  <?php if (!empty($_SESSION['cart_on_login'])): ?>
+  <script>
+    // Replace localStorage cart with THIS user's saved cart from DB
+    localStorage.setItem('cart', <?= $_SESSION['cart_on_login'] ?>);
+    <?php unset($_SESSION['cart_on_login']); ?>
+  </script>
+  <?php endif; ?>
+
+  <?php if ($authError): ?>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const errBox = document.createElement('div');
+      errBox.style.cssText = 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:.9rem;';
+      errBox.textContent = <?= json_encode($authError) ?>;
+      <?php if ($openSignup): ?>
+        switchToSignUp();
+        document.getElementById('formSignUp').querySelector('.lg-form-head').after(errBox);
+      <?php else: ?>
+        document.getElementById('formSignIn').querySelector('.lg-form-head').after(errBox);
+      <?php endif; ?>
+    });
+  </script>
+  <?php endif; ?>
+
+  <?php if ($openSignup): ?>
+  <script>
+    document.addEventListener('DOMContentLoaded', switchToSignUp);
+  </script>
+  <?php endif; ?>
 </body>
 
 </html>

@@ -1,5 +1,4 @@
 /* GENERAL */
-
 body {
   background: #f5f5f5;
   font-family: Arial, Helvetica, sans-serif;
@@ -9,10 +8,12 @@ body {
 .premium-navbar {
   padding: 16px 0;
   background: rgba(255, 255, 255, 0.97) !important;
-  backdrop-filter: blur(20px);
+  /* backdrop-filter removed — it creates a stacking context that traps dropdowns */
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-bottom: 1px solid rgba(220, 53, 69, 0.08);
+  position: relative;
+  z-index: 1050;
 }
 
 .premium-navbar.scrolled {
@@ -62,12 +63,19 @@ body {
   letter-spacing: 0.5px;
   box-shadow: 0 6px 20px rgba(220, 53, 69, 0.35);
   transition: all 0.4s ease;
-  min-width: 160px;
+  min-width: unset; /* removed fixed width so dropdown aligns naturally */
 }
 
 .btn-premium:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 30px rgba(220, 53, 69, 0.5);
+  color: white !important;
+}
+
+/* Dropdown — let Bootstrap/Popper handle all positioning */
+.navbar .dropdown-menu {
+  z-index: 9999;
+  /* NO position override here — Popper.js handles it with strategy:'fixed' */
 }
 
 /* ====================== MOBILE RESPONSIVE IMPROVEMENTS ====================== */
@@ -99,6 +107,15 @@ body {
     width: 100%;
     padding: 14px;
     font-size: 1.1rem;
+  }
+
+  .navbar .dropdown-menu {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none;
+    border: 1px solid rgba(220,53,69,0.15);
+    border-radius: 12px;
+    margin-top: 8px;
   }
 }
 

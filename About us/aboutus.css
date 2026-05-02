@@ -28,7 +28,6 @@ body {
   background: var(--surface);
   font-family: 'DM Sans', sans-serif;
   color: var(--ink);
-  padding-top: 70px;
   overflow-x: hidden;
 }
 

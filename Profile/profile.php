@@ -152,7 +152,6 @@ function statusIcon(string $s): string
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding-top: 88px;
       min-height: 100vh;
     }
 

@@ -1,7 +1,15 @@
 <?php
 session_start();
-session_unset();
 session_destroy();
-header("Location: login.php");
-exit();
 ?>
+<!DOCTYPE html>
+<html>
+<head><title>Logging out...</title></head>
+<body>
+<script>
+  // Wipe the cart so the next user starts clean
+  localStorage.removeItem('cart');
+  window.location.href = '../login and signup/login.php';
+</script>
+</body>
+</html>

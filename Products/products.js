@@ -48,28 +48,8 @@ function updateCount() {
 document.getElementById("productSearch").addEventListener("keyup", filterCards);
 document.getElementById("productSearch").addEventListener("search", filterCards);
 
-// ── Cart icon count
-function updateCartIcon() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const el = document.getElementById("cart-count");
-  if (el) el.innerText = cart.length;
-}
-document.addEventListener("DOMContentLoaded", updateCartIcon);
-
-// ── Add to cart & redirect
-function addToCartAndGo(id, name, price, image) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const product = { id, name, price: parseFloat(price), image, quantity: 1 };
-  const index = cart.findIndex((item) => item.id === id);
-  if (index > -1) {
-    cart[index].quantity += 1;
-  } else {
-    cart.push(product);
-  }
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartIcon();
-  window.location.href = "../Add to Cart and CheckOut/Cart.php";
-}
+// ── Cart icon count & addToCartAndGo are defined in navbar.js
+//    and work on every page. No need to redefine them here.
 
 // ══════════════════════════════════════════
 //  QUICK VIEW MODAL
