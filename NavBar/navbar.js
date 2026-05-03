@@ -3,8 +3,9 @@
 // ══════════════════════════════════════════════════════════════
 
 // Absolute paths work from ANY folder (Home/, Products/, NavBar/, etc.)
-const SAVE_CART_URL = '/Add to Cart and CheckOut/save-cart.php';
-const CART_PAGE_URL = '/Add to Cart and CheckOut/Cart.php';
+// Replace these two lines:
+const SAVE_CART_URL = '/Hassan%20Traders%20Sanitary%20Store/Add-to-Cart-and-CheckOut/save-cart.php';
+const CART_PAGE_URL = '/Hassan%20Traders%20Sanitary%20Store/Add-to-Cart-and-CheckOut/Cart.php';
 
 // ── Read cart from localStorage safely ───────────────────────
 function getCart() {

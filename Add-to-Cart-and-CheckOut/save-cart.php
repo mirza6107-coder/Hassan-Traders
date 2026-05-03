@@ -19,8 +19,8 @@ if (!$conn) {
 }
 
 mysqli_set_charset($conn, "utf8mb4");
-if (!$conn || mysqli_connect_errno()) {
-    echo json_encode(['success' => false, 'reason' => 'db_connection_failed', 'error' => mysqli_connect_error()]);
+if (!$conn) {
+    echo json_encode(['success' => false, 'reason' => 'db_connection_failed']);
     exit;
 }
 
@@ -47,21 +47,7 @@ $price     = (float)($data['price']  ?? 0);
 $image     = trim($data['image']     ?? '');
 $quantity  = (int)($data['quantity'] ?? 1);
 
-// ── Auto-create table if needed ───────────────────────────────
-mysqli_query($conn, "
-    CREATE TABLE IF NOT EXISTS user_cart (
-        id          INT            AUTO_INCREMENT PRIMARY KEY,
-        user_id     INT            NOT NULL,
-        product_id  INT            NOT NULL,
-        name        VARCHAR(255)   NOT NULL,
-        price       DECIMAL(10,2)  NOT NULL,
-        image       VARCHAR(255),
-        quantity    INT            NOT NULL DEFAULT 1,
-        updated_at  TIMESTAMP      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        UNIQUE KEY  unique_user_product (user_id, product_id),
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )
-");
+
 
 // ── Handle each action ────────────────────────────────────────
 

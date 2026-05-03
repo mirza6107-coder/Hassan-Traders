@@ -32,7 +32,7 @@
     <div class="ct-hero-grid"></div>
     <div class="container ct-hero-inner">
       <div class="ct-breadcrumb">
-        <a href="../Home/home.html">Home</a>
+        <a href="../Home/home.php">Home</a>
         <i class="bi bi-chevron-right"></i>
         <a href="../Products/Products.php">Products</a>
         <i class="bi bi-chevron-right"></i>
@@ -174,19 +174,19 @@
         <div class="col-lg-2 col-md-6">
           <h5 class="fw-bold mb-4">Explore</h5>
           <ul class="list-unstyled footer-links">
-            <li><a href="../Home/home.html">Home</a></li>
-            <li><a href="../About us/aboutus.html">About Us</a></li>
-            <li><a href="../Products/Products.html">Our Products</a></li>
-            <li><a href="../Contact us/contactus.html">Support</a></li>
+            <li><a href="../Home/home.php">Home</a></li>
+            <li><a href="../About us/aboutus.php">About Us</a></li>
+            <li><a href="../Products/Products.php">Our Products</a></li>
+            <li><a href="../Contact us/contactus.php">Support</a></li>
           </ul>
         </div>
         <div class="col-lg-2 col-md-6">
           <h5 class="fw-bold mb-4">Products</h5>
           <ul class="list-unstyled footer-links">
-            <li><a href="../Products/Products.html">PPR-C Pipes</a></li>
-            <li><a href="../Products/Products.html">U-PVC Fittings</a></li>
-            <li><a href="../Products/Products.html">Water Tanks</a></li>
-            <li><a href="../Products/Products.html">Bath Sets</a></li>
+            <li><a href="../Products/Products.php">PPR-C Pipes</a></li>
+            <li><a href="../Products/Products.php">U-PVC Fittings</a></li>
+            <li><a href="../Products/Products.php">Water Tanks</a></li>
+            <li><a href="../Products/Products.php">Bath Sets</a></li>
           </ul>
         </div>
         <div class="col-lg-4 col-md-6">

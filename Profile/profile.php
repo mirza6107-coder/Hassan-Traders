@@ -21,10 +21,9 @@ if (!$conn) {
 }
 
 mysqli_set_charset($conn, "utf8mb4");
-if (!$conn) die("Connection failed: " . mysqli_connect_error());
 
 $userId    = (int)$_SESSION['user_id'];
-$userEmail = $_SESSION['user_email'] ?? '';
+$userEmail = $user['email'] ?? $_SESSION['user_email'] ?? '';
 
 // ── Fetch user (column is 'fullname' not 'name') ──────────────────
 $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ? LIMIT 1");
@@ -128,6 +127,7 @@ function stIcon(string $s): string
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- Vendor -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
@@ -414,7 +414,6 @@ function stIcon(string $s): string
   </div><!-- /container -->
 
   <!-- ════ Scripts ════ -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../NavBar/navbar.js"></script>
   <script src="profile.js"></script>
 

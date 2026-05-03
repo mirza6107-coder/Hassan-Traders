@@ -16,10 +16,7 @@ if (!$conn) {
 
 mysqli_set_charset($conn, "utf8mb4");
 
-if (!$conn) {
-    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
-    exit;
-}
+
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -93,6 +90,13 @@ try {
     }
 
     mysqli_commit($conn);
+
+    // Save shipping info to session for auto-fill on next checkout
+    $_SESSION['checkout_name']    = $name;
+    $_SESSION['checkout_phone']   = $phone;
+    $_SESSION['checkout_email']   = $email;
+    $_SESSION['checkout_address'] = $address;
+    $_SESSION['checkout_city']    = $city;
 
     echo json_encode([
         'success'  => true,

@@ -394,7 +394,7 @@ $initials = $userName ? strtoupper(substr(trim($userName), 0, 1)) : '';
                 <button onclick="handlePlaceOrder()" class="co-place-btn">
                   <i class="bi bi-lock-fill me-2"></i> Place Order Now
                 </button>
-                <a href="../Add to Cart and CheckOut/Cart.php" class="co-back-btn">
+                <a href="../Add-to-Cart-and-CheckOut/Cart.php" class="co-back-btn">
                   <i class="bi bi-arrow-left me-1"></i> Back to Cart
                 </a>
               </div>

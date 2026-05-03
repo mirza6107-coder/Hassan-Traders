@@ -5,9 +5,9 @@
 
 // SAVE_CART_URL is defined in navbar.js which loads first
 // Fallback in case this page loads without navbar.js
-if (typeof SAVE_CART_URL === 'undefined') {
-  var SAVE_CART_URL = '/Add to Cart and CheckOut/save-cart.php';
-}
+// if (typeof SAVE_CART_URL === 'undefined') {
+//   var SAVE_CART_URL = '/Add to Cart and CheckOut/save-cart.php';
+// }
 
 document.addEventListener('DOMContentLoaded', function () {
   renderCart();

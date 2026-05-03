@@ -113,7 +113,7 @@
             </p>
             <div class="hm-slide-actions">
               <a href="../Products/Products.php" class="hm-btn-primary">View U-PVC Collection <i class="bi bi-arrow-right ms-1"></i></a>
-              <a href="../Contact us/contactus.html" class="hm-btn-ghost">Get a Quote</a>
+              <a href="../Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
             </div>
             <div class="hm-slide-tags">
               <span><i class="bi bi-check-circle-fill"></i> Leak-Proof</span>
