@@ -56,8 +56,10 @@ if ($userEmail) {
     FROM orders o
     LEFT JOIN order_items oi ON oi.order_id = o.id
     LEFT JOIN customers   c  ON o.customer_id = c.id
-    WHERE c.email = ?
-    GROUP BY o.id
+    WHERE o.customer_id IN (
+      SELECT id FROM customers WHERE email = ?
+    )
+    GROUP BY o.id, c.address, c.city
     ORDER BY o.order_date DESC
   ");
   mysqli_stmt_bind_param($stmt2, 's', $userEmail);
