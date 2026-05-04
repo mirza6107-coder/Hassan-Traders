@@ -22,8 +22,7 @@ if (!$conn) {
 
 mysqli_set_charset($conn, "utf8mb4");
 
-$userId    = (int)$_SESSION['user_id'];
-$userEmail = $user['email'] ?? $_SESSION['user_email'] ?? '';
+$userId = (int)$_SESSION['user_id'];
 
 // ── Fetch user (column is 'fullname' not 'name') ──────────────────
 $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ? LIMIT 1");
@@ -31,6 +30,9 @@ mysqli_stmt_bind_param($stmt, 'i', $userId);
 mysqli_stmt_execute($stmt);
 $user = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt)) ?? [];
 mysqli_stmt_close($stmt);
+
+// ── Resolve email AFTER $user is loaded ───────────────────────────
+$userEmail = $user['email'] ?? $_SESSION['user_email'] ?? '';
 
 // ── Fetch orders ──────────────────────────────────────────────────
 // Orders link to 'customers' table by email (since customers are
@@ -78,14 +80,34 @@ if ($userEmail) {
   mysqli_stmt_close($stmt2);
 }
 
+// ── Fallback: pull phone/city/address from latest customer record ─
+// (in case users table doesn't store these columns)
+$latestCustomer = [];
+if ($userEmail) {
+  $stmt3 = mysqli_prepare($conn,
+    "SELECT phone, city, address FROM customers WHERE email = ? ORDER BY id DESC LIMIT 1"
+  );
+  mysqli_stmt_bind_param($stmt3, 's', $userEmail);
+  mysqli_stmt_execute($stmt3);
+  $latestCustomer = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt3)) ?? [];
+  mysqli_stmt_close($stmt3);
+}
+
 mysqli_close($conn);
 
 // ── Computed helpers ──────────────────────────────────────────────
-$name       = htmlspecialchars($user['fullname'] ?? $_SESSION['user_name']  ?? 'User');
-$email      = htmlspecialchars($user['email']   ?? $_SESSION['user_email'] ?? '');
-$phone      = htmlspecialchars($user['phone']   ?? $_SESSION['user_phone'] ?? '');
-$address    = htmlspecialchars($user['address'] ?? $_SESSION['shipping_address'] ?? '');
-$city       = htmlspecialchars($user['city']    ?? $_SESSION['shipping_city']    ?? '');
+$name    = htmlspecialchars($user['fullname'] ?? $_SESSION['user_name']  ?? 'User');
+$email   = htmlspecialchars($user['email']   ?? $_SESSION['user_email'] ?? '');
+// Phone / city / address: users table first, then customers table, then session
+$phone   = htmlspecialchars(
+             $user['phone']   ?? $latestCustomer['phone']   ?? $_SESSION['user_phone'] ?? ''
+           );
+$address = htmlspecialchars(
+             $user['address'] ?? $latestCustomer['address'] ?? $_SESSION['shipping_address'] ?? ''
+           );
+$city    = htmlspecialchars(
+             $user['city']    ?? $latestCustomer['city']    ?? $_SESSION['shipping_city'] ?? ''
+           );
 $joined     = isset($user['created_at']) ? date('M Y', strtotime($user['created_at'])) : '—';
 $orderCount = count($orders);
 $totalSpent = array_sum(array_column($orders, 'total_amount'));
@@ -262,7 +284,7 @@ function stIcon(string $s): string
 
           <!-- Action buttons -->
           <div class="card-panel-body" style="border-top:1px solid var(--border-light);padding-top:18px;">
-            <a href="../Add to Cart and CheckOut/checkout.php" class="btn-cta mb-2">
+            <a href="../Add-to-Cart-and-CheckOut/checkout.php" class="btn-cta mb-2">
               <i class="bi bi-bag-plus-fill"></i> Place New Order
             </a>
             <a href="../Products/Products.php" class="btn-secondary-cta">
