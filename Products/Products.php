@@ -211,7 +211,7 @@
                   <span class="cat-count"><?php echo $catCount; ?></span>
                 </button>
               <?php endforeach; ?>
-
+ 
             </div>
           </div>
         </div>
