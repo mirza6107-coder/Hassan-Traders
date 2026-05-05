@@ -2,6 +2,7 @@
    HASSAN TRADERS — HOME PAGE STYLES
    Style.css
 ══════════════════════════════════════════════ */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap");
 
 /* ── RESET & VARIABLES ── */
 *,
@@ -22,12 +23,13 @@
   --surface: #f9f9fb;
   --white: #ffffff;
   --radius: 16px;
+  --font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --shadow: 0 20px 56px rgba(0, 0, 0, 0.1);
 }
 
 body {
   background: var(--surface);
-  font-family: "DM Sans", Arial, sans-serif;
+  font-family: var(--font);
   color: var(--ink);
   overflow-x: hidden;
 }

@@ -2,31 +2,35 @@
    HASSAN TRADERS — ABOUT US PAGE STYLES
    aboutus.css
 ══════════════════════════════════════════════ */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap");
 
 /* ── RESET & CSS VARIABLES ── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 :root {
-  --red:      #dc3545;
+  --red: #dc3545;
   --red-dark: #b02030;
-  --ink:      #111318;
-  --slate:    #3a3f4b;
-  --muted:    #7a8094;
-  --border:   #e8eaf0;
-  --surface:  #f9f9fb;
-  --white:    #ffffff;
-  --radius:   16px;
-  --shadow:   0 24px 64px rgba(0, 0, 0, 0.10);
+  --ink: #111318;
+  --slate: #3a3f4b;
+  --muted: #7a8094;
+  --border: #e8eaf0;
+  --surface: #f9f9fb;
+  --white: #ffffff;
+  --radius: 16px;
+  --shadow: 0 24px 64px rgba(0, 0, 0, 0.1);
+  --font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
 }
 
 /* ── BASE ── */
 body {
   background: var(--surface);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font);
   color: var(--ink);
   overflow-x: hidden;
 }
@@ -49,7 +53,7 @@ body {
 }
 
 .au-section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   font-weight: 800;
   color: var(--ink);
@@ -90,7 +94,7 @@ body {
 
 /* Animated grid */
 .au-hero::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background-image:
@@ -102,9 +106,11 @@ body {
 
 /* Diagonal surface cut */
 .au-hero::after {
-  content: '';
+  content: "";
   position: absolute;
-  bottom: -2px; left: 0; right: 0;
+  bottom: -2px;
+  left: 0;
+  right: 0;
   height: 130px;
   background: var(--surface);
   clip-path: polygon(0 55%, 100% 0, 100% 100%, 0 100%);
@@ -136,7 +142,8 @@ body {
 }
 
 .au-hero-eyebrow span {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--red);
   display: inline-block;
@@ -144,7 +151,7 @@ body {
 }
 
 .au-hero h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 800;
   color: var(--white);
@@ -184,7 +191,10 @@ body {
   font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  transition:
+    background 0.25s,
+    transform 0.2s,
+    box-shadow 0.25s;
 }
 
 .au-btn-primary:hover {
@@ -203,7 +213,10 @@ body {
   border: 1.5px solid rgba(255, 255, 255, 0.2);
   font-size: 0.88rem;
   font-weight: 600;
-  transition: border-color 0.25s, color 0.25s, background 0.25s;
+  transition:
+    border-color 0.25s,
+    color 0.25s,
+    background 0.25s;
 }
 
 .au-btn-ghost:hover {
@@ -227,7 +240,7 @@ body {
 }
 
 .au-badge-number {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 2.2rem;
   font-weight: 800;
   color: white;
@@ -276,9 +289,11 @@ body {
 }
 
 .au-stat-item:not(:last-child)::after {
-  content: '';
+  content: "";
   position: absolute;
-  right: 0; top: 20%; bottom: 20%;
+  right: 0;
+  top: 20%;
+  bottom: 20%;
   width: 1px;
   background: var(--border);
 }
@@ -295,7 +310,7 @@ body {
 }
 
 .au-stat-num {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 2.1rem;
   font-weight: 700;
   color: var(--ink);
@@ -410,15 +425,20 @@ body {
   border-radius: 18px;
   padding: 36px 28px;
   border: 1px solid var(--border);
-  transition: transform 0.28s, box-shadow 0.28s, border-color 0.28s;
+  transition:
+    transform 0.28s,
+    box-shadow 0.28s,
+    border-color 0.28s;
   position: relative;
   overflow: hidden;
 }
 
 .au-why-card::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
   background: var(--red);
   transform: scaleX(0);
@@ -437,14 +457,19 @@ body {
 }
 
 .au-why-icon-wrap {
-  width: 56px; height: 56px;
+  width: 56px;
+  height: 56px;
   border-radius: 14px;
   background: rgba(220, 53, 69, 0.08);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.4rem;
   color: var(--red);
   margin-bottom: 20px;
-  transition: background 0.25s, color 0.25s;
+  transition:
+    background 0.25s,
+    color 0.25s;
 }
 
 .au-why-card:hover .au-why-icon-wrap {
@@ -453,7 +478,7 @@ body {
 }
 
 .au-why-card h4 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--ink);
@@ -495,7 +520,7 @@ body {
 }
 
 .au-value-number {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 3rem;
   font-weight: 800;
   color: rgba(220, 53, 69, 0.12);
@@ -504,7 +529,7 @@ body {
 }
 
 .au-value-block h5 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--ink);
@@ -539,11 +564,17 @@ body {
 
 /* Red radial glow top-right */
 .au-cta-section::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: -100px; right: -100px;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(220, 53, 69, 0.18) 0%, transparent 65%);
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(220, 53, 69, 0.18) 0%,
+    transparent 65%
+  );
   pointer-events: none;
 }
 
@@ -558,7 +589,7 @@ body {
 }
 
 .au-cta-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 800;
   color: var(--white);
@@ -584,7 +615,10 @@ body {
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  transition:
+    background 0.25s,
+    transform 0.2s,
+    box-shadow 0.25s;
 }
 
 .au-btn-cta:hover {
@@ -655,9 +689,12 @@ body {
 }
 
 .social-icon {
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   background: #333;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   color: white;
   text-decoration: none;
@@ -680,16 +717,22 @@ body {
 ══════════════════════════════════════════════ */
 .whatsapp-btn {
   position: fixed;
-  bottom: 28px; right: 28px;
-  width: 56px; height: 56px;
+  bottom: 28px;
+  right: 28px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: #25d366 !important;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff !important;
   font-size: 1.5rem;
   text-decoration: none;
   z-index: 9999;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
   animation: pulse-wa 2.5s infinite;
 }
 
@@ -702,30 +745,52 @@ body {
    KEYFRAME ANIMATIONS
 ══════════════════════════════════════════════ */
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes grid-drift {
-  from { background-position: 0 0; }
-  to   { background-position: 48px 48px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 48px 48px;
+  }
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
 }
 
 @keyframes pulse-wa {
-  0%, 100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4); }
-  50%       { box-shadow: 0 8px 36px rgba(37, 211, 102, 0.65); }
+  0%,
+  100% {
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 36px rgba(37, 211, 102, 0.65);
+  }
 }
 
 /* Animate-on-scroll initial state */
 [data-animate] {
   opacity: 0;
   transform: translateY(32px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 [data-animate].au-visible {
@@ -737,19 +802,48 @@ body {
    RESPONSIVE
 ══════════════════════════════════════════════ */
 @media (max-width: 992px) {
-  .au-why-grid        { grid-template-columns: repeat(2, 1fr); }
-  .au-cta-inner       { grid-template-columns: 1fr; gap: 40px; }
-  .au-hero-badge      { display: none; }
+  .au-why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .au-cta-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .au-hero-badge {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
-  .au-hero            { padding: 70px 24px 160px; }
-  .au-stats-grid      { grid-template-columns: repeat(2, 1fr); }
-  .au-stat-item:nth-child(2)::after { display: none; }
-  .au-story-grid      { grid-template-columns: 1fr; }
-  .au-story-img       { height: 280px; }
-  .au-story-img-badge { right: 10px; bottom: -14px; font-size: 0.74rem; }
-  .au-why-grid        { grid-template-columns: 1fr; }
-  .au-values-grid     { grid-template-columns: 1fr; }
-  .au-value-divider   { width: auto; height: 1px; margin: 32px 0; }
+  .au-hero {
+    padding: 70px 24px 160px;
+  }
+  .au-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .au-stat-item:nth-child(2)::after {
+    display: none;
+  }
+  .au-story-grid {
+    grid-template-columns: 1fr;
+  }
+  .au-story-img {
+    height: 280px;
+  }
+  .au-story-img-badge {
+    right: 10px;
+    bottom: -14px;
+    font-size: 0.74rem;
+  }
+  .au-why-grid {
+    grid-template-columns: 1fr;
+  }
+  .au-values-grid {
+    grid-template-columns: 1fr;
+  }
+  .au-value-divider {
+    width: auto;
+    height: 1px;
+    margin: 32px 0;
+  }
 }

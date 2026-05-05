@@ -2,6 +2,7 @@
    HASSAN TRADERS — CHECKOUT PAGE STYLES
    checkout.css
 ══════════════════════════════════════════════ */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap");
 
 /* ── RESET & VARIABLES ── */
 *,
@@ -24,11 +25,12 @@
   --green: #16a34a;
   --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.06);
   --shadow: 0 20px 56px rgba(0, 0, 0, 0.08);
+  --font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
 }
 
 body {
   background: var(--surface);
-  font-family: "DM Sans", Arial, sans-serif;
+  font-family: var(--font);
   color: var(--ink);
   overflow-x: hidden;
 }

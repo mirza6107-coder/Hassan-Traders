@@ -103,7 +103,7 @@ if (file_exists($cartInitPath)) {
            class="position-relative text-dark text-decoration-none">
           <i class="bi bi-cart3 fs-4"></i>
           <span id="cart-count"
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: block;">
             0
           </span>
         </a>

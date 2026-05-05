@@ -20,7 +20,8 @@ function updateCartIcon() {
   const el    = document.getElementById('cart-count');
   if (el) {
     el.innerText     = total;
-    el.style.display = total > 0 ? '' : 'none';
+    // el.style.display = total > 0 ? '' : 'none';
+    el.style.display = 'block';
   }
 }
 
