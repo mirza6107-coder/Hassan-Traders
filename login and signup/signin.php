@@ -63,9 +63,22 @@ while ($row = mysqli_fetch_assoc($cartResult)) {
 }
 $_SESSION['cart_on_login'] = json_encode($cartForJS);
 
+// ── Set session ───────────────────────────────────────────────
 if ($user['role'] === 'admin') {
+    // Separate keys for Admin
+    $_SESSION['admin_id']    = $user['id'];
+    $_SESSION['admin_name']  = $user['fullname'];
+    $_SESSION['admin_email'] = $user['email'];
+    $_SESSION['admin_role']  = 'admin';
+    
     header("Location: ../Admin-Panel/dashboard.php");
 } else {
+    // Keys for standard User
+    $_SESSION['user_id']    = $user['id'];
+    $_SESSION['user_name']  = $user['fullname'];
+    $_SESSION['user_email'] = $user['email'];
+    $_SESSION['role']       = 'user';
+    
     header("Location: ../Home/home.php");
 }
 exit;

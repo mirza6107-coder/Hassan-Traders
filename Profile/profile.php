@@ -34,60 +34,56 @@ mysqli_stmt_close($stmt);
 // ── Resolve email AFTER $user is loaded ───────────────────────────
 $userEmail = $user['email'] ?? $_SESSION['user_email'] ?? '';
 
-// ── Fetch orders ──────────────────────────────────────────────────
-// Orders link to 'customers' table by email (since customers are
-// created fresh per order, not linked to users.id directly).
-// We match by the logged-in user's email address.
+// ── Fetch orders by user_id (direct, reliable) ────────────────────
+// orders.user_id links straight to users.id — no email matching
+// needed, so typos in the customers table can never hide orders.
 $orders = [];
 
-if ($userEmail) {
-  $stmt2 = mysqli_prepare($conn, "
-    SELECT
-      o.id,
-      o.order_date,
-      o.status_ENUM      AS status,
-      o.total_amount,
-      o.payment_method,
-      c.address,
-      c.city,
-      GROUP_CONCAT(oi.product_name ORDER BY oi.id SEPARATOR '||') AS item_names,
-      GROUP_CONCAT(oi.quantity     ORDER BY oi.id SEPARATOR '||') AS item_qtys,
-      GROUP_CONCAT(oi.price        ORDER BY oi.id SEPARATOR '||') AS item_prices
-    FROM orders o
-    LEFT JOIN order_items oi ON oi.order_id = o.id
-    LEFT JOIN customers   c  ON o.customer_id = c.id
-    WHERE o.customer_id IN (
-      SELECT id FROM customers WHERE email = ?
-    )
-    GROUP BY o.id, c.address, c.city
-    ORDER BY o.order_date DESC
-  ");
-  mysqli_stmt_bind_param($stmt2, 's', $userEmail);
-  mysqli_stmt_execute($stmt2);
-  $res2 = mysqli_stmt_get_result($stmt2);
-  while ($row = mysqli_fetch_assoc($res2)) {
-    $names  = array_filter(explode('||', $row['item_names']  ?? ''));
-    $qtys   = explode('||', $row['item_qtys']   ?? '');
-    $prices = explode('||', $row['item_prices'] ?? '');
-    $row['items'] = [];
-    foreach ($names as $i => $n) {
-      $row['items'][] = [
-        'name'  => $n,
-        'qty'   => $qtys[$i]   ?? 1,
-        'price' => $prices[$i] ?? 0,
-      ];
-    }
-    $orders[] = $row;
-  }
-  mysqli_stmt_close($stmt2);
+$stmt2 = mysqli_prepare($conn, "
+  SELECT
+    o.id,
+    o.order_date,
+    o.status_ENUM            AS status,
+    o.total_amount,
+    o.payment_method,
+    MAX(c.address)           AS address,
+    MAX(c.city)              AS city,
+    GROUP_CONCAT(oi.product_name ORDER BY oi.id SEPARATOR '||') AS item_names,
+    GROUP_CONCAT(oi.quantity     ORDER BY oi.id SEPARATOR '||') AS item_qtys,
+    GROUP_CONCAT(oi.price        ORDER BY oi.id SEPARATOR '||') AS item_prices
+  FROM orders o
+  LEFT JOIN order_items oi ON oi.order_id = o.id
+  LEFT JOIN customers   c  ON o.customer_id = c.id
+  WHERE o.user_id = ?
+  GROUP BY o.id, o.order_date, o.status_ENUM, o.total_amount, o.payment_method
+  ORDER BY o.order_date DESC
+");
+mysqli_stmt_bind_param($stmt2, 'i', $userId);
+if (!mysqli_stmt_execute($stmt2)) {
+  error_log('profile.php orders query failed: ' . mysqli_stmt_error($stmt2));
 }
+$res2 = mysqli_stmt_get_result($stmt2);
+while ($row = mysqli_fetch_assoc($res2)) {
+  $names  = array_filter(explode('||', $row['item_names']  ?? ''));
+  $qtys   = explode('||', $row['item_qtys']   ?? '');
+  $prices = explode('||', $row['item_prices'] ?? '');
+  $row['items'] = [];
+  foreach ($names as $i => $n) {
+    $row['items'][] = [
+      'name'  => $n,
+      'qty'   => $qtys[$i]   ?? 1,
+      'price' => $prices[$i] ?? 0,
+    ];
+  }
+  $orders[] = $row;
+}
+mysqli_stmt_close($stmt2);
 
 // ── Fallback: pull phone/city/address from latest customer record ─
-// (in case users table doesn't store these columns)
 $latestCustomer = [];
 if ($userEmail) {
   $stmt3 = mysqli_prepare($conn,
-    "SELECT phone, city, address FROM customers WHERE email = ? ORDER BY id DESC LIMIT 1"
+    "SELECT phone, city, address FROM customers WHERE LOWER(email) = LOWER(?) ORDER BY id DESC LIMIT 1"
   );
   mysqli_stmt_bind_param($stmt3, 's', $userEmail);
   mysqli_stmt_execute($stmt3);
@@ -145,15 +141,19 @@ function stIcon(string $s): string
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Profile — Hassan Traders</title>
 
-  <!-- Fonts -->
+ 
+
+  <!-- Vendor -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+       <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <!-- Vendor -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
   <!-- Site -->
   <link rel="stylesheet" href="../NavBar/navbar.css" />

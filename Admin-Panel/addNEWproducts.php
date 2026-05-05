@@ -1,8 +1,8 @@
 <?php session_start();
-if (!isset($_SESSION['user_name']) || $_SESSION['role'] !== 'admin') {
-  // If not an admin, send them to the login page or a "denied" page
-  header("Location: ../login and signup/login.php");
-  exit();
+if (!isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'admin') {
+    // If the admin session isn't found, send them back to login
+    header("Location: ../login and signup/login.php");
+    exit();
 } ?>
 
 <!doctype html>

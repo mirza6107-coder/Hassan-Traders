@@ -1,6 +1,6 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
-$user_name    = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Admin';
+$user_name = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : (isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest');
 $avatar_path  = isset($_SESSION['avatar'])    ? $_SESSION['avatar']    : null;
 $initials     = strtoupper(substr($user_name, 0, 2));
 ?>
@@ -18,37 +18,37 @@ $initials     = strtoupper(substr($user_name, 0, 2));
     <div class="sidebar-title">Admin Panel</div>
 
     <nav>
-        <a href="dashboard.php"      class="<?php echo ($current_page == 'dashboard.php')      ? 'active' : ''; ?>">
+        <a href="dashboard.php" class="<?php echo ($current_page == 'dashboard.php')      ? 'active' : ''; ?>">
             <i class="bi bi-speedometer2"></i><span>Dashboard</span>
         </a>
-        <a href="all-products.php"   class="<?php echo ($current_page == 'all-products.php')   ? 'active' : ''; ?>">
+        <a href="all-products.php" class="<?php echo ($current_page == 'all-products.php')   ? 'active' : ''; ?>">
             <i class="bi bi-grid-3x3-gap"></i><span>All Products</span>
         </a>
         <a href="addNEWproducts.php" class="<?php echo ($current_page == 'addNEWproducts.php') ? 'active' : ''; ?>">
             <i class="bi bi-plus-circle"></i><span>Add NEW Product</span>
         </a>
-        <a href="categories.php"     class="<?php echo ($current_page == 'categories.php')     ? 'active' : ''; ?>">
+        <a href="categories.php" class="<?php echo ($current_page == 'categories.php')     ? 'active' : ''; ?>">
             <i class="bi bi-tags"></i><span>Categories</span>
         </a>
-        <a href="orders.php"         class="<?php echo ($current_page == 'orders.php')         ? 'active' : ''; ?>">
+        <a href="orders.php" class="<?php echo ($current_page == 'orders.php')         ? 'active' : ''; ?>">
             <i class="bi bi-bag-check"></i><span>Orders</span>
         </a>
-        <a href="customers.php"      class="<?php echo ($current_page == 'customers.php')      ? 'active' : ''; ?>">
+        <a href="customers.php" class="<?php echo ($current_page == 'customers.php')      ? 'active' : ''; ?>">
             <i class="bi bi-people"></i><span>Customers</span>
         </a>
-        <a href="inventory.php"      class="<?php echo ($current_page == 'inventory.php')      ? 'active' : ''; ?>">
+        <a href="inventory.php" class="<?php echo ($current_page == 'inventory.php')      ? 'active' : ''; ?>">
             <i class="bi bi-box-seam"></i><span>Inventory</span>
         </a>
-        <a href="reports.php"        class="<?php echo ($current_page == 'reports.php')        ? 'active' : ''; ?>">
+        <a href="reports.php" class="<?php echo ($current_page == 'reports.php')        ? 'active' : ''; ?>">
             <i class="bi bi-bar-chart-line"></i><span>Reports</span>
         </a>
-        <a href="returns.php"        class="<?php echo ($current_page == 'returns.php')        ? 'active' : ''; ?>">
+        <a href="returns.php" class="<?php echo ($current_page == 'returns.php')        ? 'active' : ''; ?>">
             <i class="bi bi-arrow-return-left"></i><span>Returns</span>
         </a>
-        <a href="profile.php"        class="<?php echo ($current_page == 'profile.php')        ? 'active' : ''; ?>">
+        <a href="profile.php" class="<?php echo ($current_page == 'profile.php')        ? 'active' : ''; ?>">
             <i class="bi bi-person-circle"></i><span>Profile</span>
         </a>
-        <a href="messages.php"       class="<?php echo ($current_page == 'messages.php')       ? 'active' : ''; ?>">
+        <a href="messages.php" class="<?php echo ($current_page == 'messages.php')       ? 'active' : ''; ?>">
             <i class="bi bi-envelope"></i><span>Messages</span>
         </a>
     </nav>
@@ -94,21 +94,19 @@ $initials     = strtoupper(substr($user_name, 0, 2));
     </div>
 </aside>
 
-<!-- Live sync: when profile.php uploads a new avatar or updates the name,
-     this script updates the sidebar avatar & name without a page reload.
-     profile.php calls window.syncSidebarAvatar(src) and window.syncSidebarName(name). -->
+<!--  this script updates the sidebar avatar & name without a page reload.-->
 <script>
-window.syncSidebarAvatar = function(src) {
-  const img      = document.getElementById('sidebarAvatarImg');
-  const initials = document.getElementById('sidebarAvatarInitials');
-  if (!img) return;
-  img.src = src;
-  img.style.display      = 'block';
-  if (initials) initials.style.display = 'none';
-};
+    window.syncSidebarAvatar = function(src) {
+        const img = document.getElementById('sidebarAvatarImg');
+        const initials = document.getElementById('sidebarAvatarInitials');
+        if (!img) return;
+        img.src = src;
+        img.style.display = 'block';
+        if (initials) initials.style.display = 'none';
+    };
 
-window.syncSidebarName = function(name) {
-  const el = document.getElementById('sidebarUserName');
-  if (el) el.textContent = name;
-};
+    window.syncSidebarName = function(name) {
+        const el = document.getElementById('sidebarUserName');
+        if (el) el.textContent = name;
+    };
 </script>

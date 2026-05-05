@@ -1,5 +1,10 @@
 <?php
-session_start(); // This must be the very first line!
+session_start();
+if (!isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'admin') {
+    // If the admin session isn't found, send them back to login
+    header("Location: ../login and signup/login.php");
+    exit();
+}
 ?>
 <?php
 ob_start();

@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (!isset($_SESSION['admin_role']) || $_SESSION['admin_role'] !== 'admin') {
+    // If the admin session isn't found, send them back to login
+    header("Location: ../login and signup/login.php");
+    exit();
+}
 ob_start();
 ini_set('display_errors', 0);
 
