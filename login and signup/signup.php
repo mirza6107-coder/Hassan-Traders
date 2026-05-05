@@ -1,8 +1,9 @@
 <?php
 session_start();
-// db_connect.php
+
+// ====================== DATABASE CONNECTION ======================
 $host     = "localhost";
-$dbname   = "htss";   // ← CHANGE THIS
+$dbname   = "htss";
 $user     = "root"; 
 $pass     = ""; 
 
@@ -14,51 +15,84 @@ if (!$conn) {
 
 mysqli_set_charset($conn, "utf8mb4");
 
+// ====================== PROCESS SIGNUP ======================
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: login.php");
+    header("Location: login.php?tab=signup");
     exit;
 }
 
-$fullname = trim($_POST['fullname']     ?? '');
+$fullname = trim($_POST['fullname'] ?? '');
 $email    = trim($_POST['emailaddress'] ?? '');
-$password = $_POST['password']          ?? '';
+$password = $_POST['password'] ?? '';
 
 $errors = [];
-if (!$fullname)                                  $errors[] = "Full name is required.";
-if (!filter_var($email, FILTER_VALIDATE_EMAIL))  $errors[] = "A valid email is required.";
-if (strlen($password) < 6)                       $errors[] = "Password must be at least 6 characters.";
 
-if ($errors) {
+// Validation
+if (empty($fullname)) {
+    $errors[] = "Full name is required.";
+} elseif (strlen($fullname) < 3) {
+    $errors[] = "Full name must be at least 3 characters.";
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors[] = "Please enter a valid email address.";
+}
+
+if (strlen($password) < 6) {
+    $errors[] = "Password must be at least 6 characters long.";
+} elseif (!preg_match("/[A-Za-z]/", $password) || !preg_match("/[0-9]/", $password)) {
+    $errors[] = "Password must contain at least one letter and one number.";
+}
+
+// Check for existing email
+if (empty($errors)) {
+    $check = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? LIMIT 1");
+    mysqli_stmt_bind_param($check, "s", $email);
+    mysqli_stmt_execute($check);
+    mysqli_stmt_store_result($check);
+
+    if (mysqli_stmt_num_rows($check) > 0) {
+        $errors[] = "An account with this email already exists.";
+    }
+}
+
+if (!empty($errors)) {
     $_SESSION['auth_error'] = implode(' ', $errors);
     header("Location: login.php?tab=signup");
     exit;
 }
 
-$check = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? LIMIT 1");
-mysqli_stmt_bind_param($check, "s", $email);
-mysqli_stmt_execute($check);
-mysqli_stmt_store_result($check);
+// ====================== CREATE NEW USER ======================
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+$role           = 'user';
+$profileImage   = 'default_avatar.png';
 
-if (mysqli_stmt_num_rows($check) > 0) {
-    $_SESSION['auth_error'] = "An account with this email already exists.";
+$insert = mysqli_prepare($conn, 
+    "INSERT INTO users (fullname, email, password, role, profile_image) 
+     VALUES (?, ?, ?, ?, ?)"
+);
+
+mysqli_stmt_bind_param($insert, "sssss", $fullname, $email, $hashedPassword, $role, $profileImage);
+
+if (mysqli_stmt_execute($insert)) {
+    $newUserId = mysqli_insert_id($conn);
+
+    // Set session variables
+    $_SESSION['user_id']    = $newUserId;
+    $_SESSION['user_name']  = $fullname;
+    $_SESSION['user_email'] = $email;
+    $_SESSION['role']       = 'user';
+
+    // Empty cart for new user
+    $_SESSION['cart_on_login'] = '[]';
+
+    // Success redirect
+    header("Location: ../../../../Hassan Traders Sanitary Store/index.php");
+    exit;
+
+} else {
+    $_SESSION['auth_error'] = "Registration failed. Please try again.";
     header("Location: login.php?tab=signup");
     exit;
 }
-
-$hashed       = password_hash($password, PASSWORD_DEFAULT);
-$role         = 'user';
-$profileImage = 'default_avatar.png';
-
-$insert = mysqli_prepare($conn, "INSERT INTO users (fullname, email, password, role, profile_image) VALUES (?, ?, ?, ?, ?)");
-mysqli_stmt_bind_param($insert, "sssss", $fullname, $email, $hashed, $role, $profileImage);
-mysqli_stmt_execute($insert);
-$newUserId = mysqli_insert_id($conn);
-
-$_SESSION['user_id']       = $newUserId;
-$_SESSION['user_name']     = $fullname;
-$_SESSION['user_email']    = $email;
-$_SESSION['role']          = 'user';
-$_SESSION['cart_on_login'] = '[]';
-
-header("Location: ../Home/home.php");
-exit;
+?>

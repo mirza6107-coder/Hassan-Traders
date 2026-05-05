@@ -13,7 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
- 
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 
@@ -210,7 +210,7 @@
                   <span class="cat-count"><?php echo $catCount; ?></span>
                 </button>
               <?php endforeach; ?>
- 
+
             </div>
           </div>
         </div>
@@ -256,66 +256,7 @@
 
 
   <!-- ══ FOOTER ══ -->
-  <footer class="footer-section text-white pt-5 mt-3">
-    <div class="container">
-      <div class="row gy-4">
-
-        <div class="col-lg-4 col-md-6">
-          <h4 class="footer-brand-name">HASSAN TRADERS</h4>
-          <p class="footer-about">
-            Premium plumbing and sanitary solutions in Sargodha. Quality &amp; durability
-            you can trust for every build.
-          </p>
-          <div class="d-flex gap-2 mt-4">
-            <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
-          </div>
-        </div>
-
-        <div class="col-lg-2 col-md-6">
-          <h6 class="footer-col-title">Explore</h6>
-          <ul class="list-unstyled footer-links">
-            <li><a href="../Home/home.php">Home</a></li>
-            <li><a href="../About us/aboutus.php">About Us</a></li>
-            <li><a href="../Products/Products.php">Our Products</a></li>
-            <li><a href="../Contact us/contactus.php">Support</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-md-6">
-          <h6 class="footer-col-title">Products</h6>
-          <ul class="list-unstyled footer-links">
-            <li><a href="../Products/Products.php">PPR-C Pipes</a></li>
-            <li><a href="../Products/Products.php">U-PVC Fittings</a></li>
-            <li><a href="../Products/Products.php">Water Tanks</a></li>
-            <li><a href="../Products/Products.php">Bath Sets</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-          <h6 class="footer-col-title">Contact Info</h6>
-          <ul class="list-unstyled contact-list">
-            <li><i class="bi bi-geo-alt-fill footer-icon-red"></i> Sargodha, Punjab, Pakistan</li>
-            <li><i class="bi bi-telephone-fill footer-icon-red"></i> +92 300 0687080</li>
-            <li><i class="bi bi-envelope-fill footer-icon-red"></i> swsaaretheweathers@gmail.com</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <hr class="footer-divider" />
-
-      <div class="row align-items-center pb-4">
-        <div class="col-md-6 text-center text-md-start">
-          <p class="footer-copy">© 2026 Hassan Traders. All Rights Reserved.</p>
-        </div>
-        <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-          <p class="footer-copy">Designed by <span class="footer-designer">Umar Jalal</span></p>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <?php include('../Footer/footer.php'); ?>
 
   <!-- WhatsApp -->
   <a href="https://wa.me/923000687080" class="whatsapp-btn" target="_blank">

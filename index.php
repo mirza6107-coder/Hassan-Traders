@@ -22,14 +22,14 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="../NavBar/navbar.css" />
-  <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="../Hassan Traders Sanitary Store/NavBar/navbar.css" />
+  <link rel="stylesheet" href="style.css" />
 
 </head>
 
 <body>
   <!-- ══ NAVBAR ══ -->
-  <?php include('../NavBar/navbar.php'); ?>
+  <?php include('NavBar/navbar.php'); ?>
 
 
   <!-- ══ HERO CAROUSEL ══ -->
@@ -64,7 +64,7 @@
           <div class="hm-slide-img-col">
             <div class="hm-img-frame">
               <img
-                src="../Images/PPR-C.jpg"
+                src="../Hassan Traders Sanitary Store/Images/PPR-C.jpg"
                 alt="PPR-C Pipes"
                 class="hm-hero-img" />
               <div class="hm-img-overlay"></div>
@@ -80,8 +80,8 @@
               for durability, safety, and long-lasting performance.
             </p>
             <div class="hm-slide-actions">
-              <a href="../Products/Products.php" class="hm-btn-primary">Explore PPR-C Range <i class="bi bi-arrow-right ms-1"></i></a>
-              <a href="../Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-btn-primary">Explore PPR-C Range <i class="bi bi-arrow-right ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
             </div>
             <div class="hm-slide-tags">
               <span><i class="bi bi-check-circle-fill"></i> Hot &amp; Cold
@@ -98,7 +98,7 @@
           <div class="hm-slide-img-col">
             <div class="hm-img-frame">
               <img
-                src="../Images/U-pvc.jpg"
+                src="../Hassan Traders Sanitary Store/Images/U-pvc.jpg"
                 alt="U-PVC Pipes"
                 class="hm-hero-img" />
               <div class="hm-img-overlay"></div>
@@ -112,8 +112,8 @@
               builders and contractors across Sargodha.
             </p>
             <div class="hm-slide-actions">
-              <a href="../Products/Products.php" class="hm-btn-primary">View U-PVC Collection <i class="bi bi-arrow-right ms-1"></i></a>
-              <a href="../Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-btn-primary">View U-PVC Collection <i class="bi bi-arrow-right ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
             </div>
             <div class="hm-slide-tags">
               <span><i class="bi bi-check-circle-fill"></i> Leak-Proof</span>
@@ -130,7 +130,7 @@
           <div class="hm-slide-img-col">
             <div class="hm-img-frame">
               <img
-                src="../Images/WaterTank.jpg"
+                src="../Hassan Traders Sanitary Store/Images/WaterTank.jpg"
                 alt="Water Tanks"
                 class="hm-hero-img" />
               <div class="hm-img-overlay"></div>
@@ -146,8 +146,8 @@
               apartments, and industrial use.
             </p>
             <div class="hm-slide-actions">
-              <a href="../Products/Products.php" class="hm-btn-primary">Browse Water Tanks <i class="bi bi-arrow-right ms-1"></i></a>
-              <a href="../Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-btn-primary">Browse Water Tanks <i class="bi bi-arrow-right ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
             </div>
             <div class="hm-slide-tags">
               <span><i class="bi bi-check-circle-fill"></i> Food Grade</span>
@@ -163,7 +163,7 @@
           <div class="hm-slide-img-col">
             <div class="hm-img-frame">
               <img
-                src="../Images/ElectricUpvc.jpg"
+                src="../Hassan Traders Sanitary Store/Images/ElectricUpvc.jpg"
                 alt="Conduit Pipes"
                 class="hm-hero-img" />
               <div class="hm-img-overlay"></div>
@@ -177,8 +177,8 @@
               protected electrical wiring in modern buildings.
             </p>
             <div class="hm-slide-actions">
-              <a href="../Products/Products.php" class="hm-btn-primary">See Electrical Range <i class="bi bi-arrow-right ms-1"></i></a>
-              <a href="../Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-btn-primary">See Electrical Range <i class="bi bi-arrow-right ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Contact us/contactus.php" class="hm-btn-ghost">Get a Quote</a>
             </div>
             <div class="hm-slide-tags">
               <span><i class="bi bi-check-circle-fill"></i> Fire Resistant</span>
@@ -249,9 +249,9 @@
       </div>
 
       <div class="hm-cat-grid">
-        <a href="../Products/Products.php" class="hm-cat-card" data-animate>
+        <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-cat-card" data-animate>
           <div class="hm-cat-img-wrap">
-            <img src="../Images/PPR-C.jpg" alt="PPR-C Pipes" />
+            <img src="../Hassan Traders Sanitary Store/Images/PPR-C.jpg" alt="PPR-C Pipes" />
             <div class="hm-cat-overlay">
               <i class="bi bi-arrow-right-circle-fill"></i>
             </div>
@@ -262,9 +262,9 @@
           </div>
         </a>
 
-        <a href="../Products/Products.php" class="hm-cat-card" data-animate>
+        <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-cat-card" data-animate>
           <div class="hm-cat-img-wrap">
-            <img src="../Images/U-pvc.jpg" alt="UPVC Pipes" />
+            <img src="../Hassan Traders Sanitary Store/Images/U-pvc.jpg" alt="UPVC Pipes" />
             <div class="hm-cat-overlay">
               <i class="bi bi-arrow-right-circle-fill"></i>
             </div>
@@ -275,9 +275,9 @@
           </div>
         </a>
 
-        <a href="../Products/Products.php" class="hm-cat-card" data-animate>
+        <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-cat-card" data-animate>
           <div class="hm-cat-img-wrap">
-            <img src="../Images/WaterTank.jpg" alt="Water Tanks" />
+            <img src="../Hassan Traders Sanitary Store/Images/WaterTank.jpg" alt="Water Tanks" />
             <div class="hm-cat-overlay">
               <i class="bi bi-arrow-right-circle-fill"></i>
             </div>
@@ -288,9 +288,9 @@
           </div>
         </a>
 
-        <a href="../Products/Products.php" class="hm-cat-card" data-animate>
+        <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-cat-card" data-animate>
           <div class="hm-cat-img-wrap">
-            <img src="../Images/ElectricUpvc.jpg" alt="Electric Pipes" />
+            <img src="../Hassan Traders Sanitary Store/Images/ElectricUpvc.jpg" alt="Electric Pipes" />
             <div class="hm-cat-overlay">
               <i class="bi bi-arrow-right-circle-fill"></i>
             </div>
@@ -321,9 +321,9 @@
         <div class="hm-product-card" data-animate>
           <div class="hm-product-badge">Best Seller</div>
           <div class="hm-product-img-wrap">
-            <img src="../Images/PPR-C.jpg" alt="PPR-C Pipes" />
+            <img src="../Hassan Traders Sanitary Store/Images/PPR-C.jpg" alt="PPR-C Pipes" />
             <div class="hm-product-img-overlay">
-              <a href="../Products/Products.php" class="hm-quick-view">Quick View <i class="bi bi-eye ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-quick-view">Quick View <i class="bi bi-eye ms-1"></i></a>
             </div>
           </div>
           <div class="hm-product-body">
@@ -331,43 +331,43 @@
             <p>
               High-durability plumbing solutions for hot &amp; cold water.
             </p>
-            <a href="../Products/Products.php" class="hm-product-btn">View Details <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-product-btn">View Details <i class="bi bi-arrow-right ms-1"></i></a>
           </div>
         </div>
 
         <!-- Card 2 -->
         <div class="hm-product-card" data-animate>
           <div class="hm-product-img-wrap">
-            <img src="../Images/U-pvc.jpg" alt="U-PVC Pipes" />
+            <img src="../Hassan Traders Sanitary Store/Images/U-pvc.jpg" alt="U-PVC Pipes" />
             <div class="hm-product-img-overlay">
-              <a href="../Products/Products.php" class="hm-quick-view">Quick View <i class="bi bi-eye ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-quick-view">Quick View <i class="bi bi-eye ms-1"></i></a>
             </div>
           </div>
           <div class="hm-product-body">
             <h5>U-PVC (Pipes &amp; Fitting)</h5>
             <p>Leak-proof drainage and sewerage systems.</p>
-            <a href="../Products/Products.php" class="hm-product-btn">View Details <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-product-btn">View Details <i class="bi bi-arrow-right ms-1"></i></a>
           </div>
         </div>
 
         <!-- Card 3 -->
         <div class="hm-product-card" data-animate>
           <div class="hm-product-img-wrap">
-            <img src="../Images/WaterTank.jpg" alt="Water Tank" />
+            <img src="../Hassan Traders Sanitary Store/Images/WaterTank.jpg" alt="Water Tank" />
             <div class="hm-product-img-overlay">
-              <a href="../Products/Products.php" class="hm-quick-view">Quick View <i class="bi bi-eye ms-1"></i></a>
+              <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-quick-view">Quick View <i class="bi bi-eye ms-1"></i></a>
             </div>
           </div>
           <div class="hm-product-body">
             <h5>Water Tank</h5>
             <p>Food-grade, multi-layer storage tanks.</p>
-            <a href="../Products/Products.php" class="hm-product-btn">View Details <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-product-btn">View Details <i class="bi bi-arrow-right ms-1"></i></a>
           </div>
         </div>
       </div>
 
       <div class="text-center mt-5">
-        <a href="../Products/Products.php" class="hm-view-all">View All Products <i class="bi bi-grid-3x3-gap-fill ms-2"></i></a>
+        <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-view-all">View All Products <i class="bi bi-grid-3x3-gap-fill ms-2"></i></a>
       </div>
     </div>
   </section>
@@ -521,8 +521,8 @@
           expert guidance on every product we carry.
         </p>
         <div class="hm-cta-actions">
-          <a href="../Contact us/contactus.php" class="hm-cta-btn-primary"><i class="bi bi-telephone-fill me-2"></i> Contact Us Now</a>
-          <a href="../Products/Products.php" class="hm-cta-btn-ghost">Browse Products</a>
+          <a href="../../Hassan Traders Sanitary Store/Contact us/contactus.php" class="hm-cta-btn-primary"><i class="bi bi-telephone-fill me-2"></i> Contact Us Now</a>
+          <a href="../../Hassan Traders Sanitary Store/Products/Products.php" class="hm-cta-btn-ghost">Browse Products</a>
         </div>
       </div>
       <div class="hm-cta-info-card" data-animate>
@@ -557,73 +557,10 @@
     </div>
   </section>
 
-  <!-- ══ FOOTER ══ -->
-  <footer class="footer-section text-white pt-5 mt-5">
-    <div class="container">
-      <div class="row gy-4">
-        <div class="col-lg-4 col-md-6">
-          <h4 class="fw-bold mb-4 text-danger">HASSAN TRADERS</h4>
-          <p class="text-secondary">
-            Premium plumbing and sanitary solutions in Sargodha. Quality
-            durability you can trust for every build.
-          </p>
-          <div class="d-flex gap-3 mt-4">
-            <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-6">
-          <h5 class="fw-bold mb-4">Explore</h5>
-          <ul class="list-unstyled footer-links">
-            <li><a href="../Home/home.php">Home</a></li>
-            <li><a href="../About us/aboutus.php">About Us</a></li>
-            <li><a href="../Products/Products.php">Our Products</a></li>
-            <li><a href="../Contact us/contactus.php">Support</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-2 col-md-6">
-          <h5 class="fw-bold mb-4">Products</h5>
-          <ul class="list-unstyled footer-links">
-            <li><a href="../Products/Products.php">PPR-C Pipes</a></li>
-            <li><a href="../Products/Products.php">U-PVC Fittings</a></li>
-            <li><a href="../Products/Products.php">Water Tanks</a></li>
-            <li><a href="../Products/Products.php">Bath Sets</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <h5 class="fw-bold mb-4">Contact Info</h5>
-          <ul class="list-unstyled contact-list">
-            <li>
-              <i class="bi bi-geo-alt-fill text-danger me-2"></i> Sargodha,
-              Punjab, Pakistan
-            </li>
-            <li>
-              <i class="bi bi-telephone-fill text-danger me-2"></i> +92 300
-              0687080
-            </li>
-            <li>
-              <i class="bi bi-envelope-fill text-danger me-2"></i>
-              swsaaretheweathers@gmail.com
-            </li>
-          </ul>
-        </div>
-      </div>
-      <hr class="mt-5 mb-4 border-secondary" />
-      <div class="row align-items-center pb-4">
-        <div class="col-md-6 text-center text-md-start">
-          <p class="mb-0 text-secondary small">
-            © 2026 Hassan Traders. All Rights Reserved.
-          </p>
-        </div>
-        <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-          <p class="mb-0 text-secondary small">
-            Designed by <span class="text-white">Umar Jalal</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <!-- Footer -->
+     <?php include('Footer/footer.php'); ?>
+
+  
 
   <!-- WHATSAPP BUTTON -->
   <a href="https://wa.me/923000687080" class="whatsapp-btn" target="_blank">
@@ -631,8 +568,8 @@
   </a>
 
 
-  <script src="../NavBar/navbar.js"></script>
-  <script src="javascript.js"></script>
+  <script src="../Hassan Traders Sanitary Store/NavBar/navbar.js"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

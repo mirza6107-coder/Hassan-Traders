@@ -88,7 +88,7 @@ $initials     = strtoupper(substr($user_name, 0, 2));
             </a>
         </div>
 
-        <a href="../Home/home.php" class="btn-back">
+        <a href="../index.php" class="btn-back">
             <i class="bi bi-arrow-left"></i> Back to Website
         </a>
     </div>

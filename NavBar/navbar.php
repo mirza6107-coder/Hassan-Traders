@@ -61,8 +61,8 @@ if (file_exists($cartInitPath)) {
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top premium-navbar" id="mainNav">
   <div class="container">
 
-    <a class="navbar-brand d-flex align-items-center" href="../Home/home.php" id="logo">
-      <img src="../Images/Hassan Traders logo 2.png" alt="Hassan Traders" class="logo-img"/>
+    <a class="navbar-brand d-flex align-items-center" href="../../Hassan Traders Sanitary Store/index.php" id="logo">
+      <img src="../../Hassan Traders Sanitary Store/Images/Hassan Traders logo 2.png" alt="Hassan Traders" class="logo-img"/>
     </a>
 
     <button class="navbar-toggler border-0" type="button"
@@ -76,22 +76,22 @@ if (file_exists($cartInitPath)) {
 
       <ul class="navbar-nav mx-auto align-items-center">
         <li class="nav-item">
-          <a class="nav-link" href="../Home/home.php">
+          <a class="nav-link" href="../../Hassan Traders Sanitary Store/index.php">
             <i class="bi bi-house-door-fill me-2"></i>Home
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../Products/Products.php">
+          <a class="nav-link" href="../../Hassan Traders Sanitary Store/Products/Products.php">
             <i class="bi bi-grid me-2"></i>Products
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../About us/aboutus.php">
+          <a class="nav-link" href="../../Hassan Traders Sanitary Store/About us/aboutus.php">
             <i class="bi bi-info-circle-fill me-2"></i>About Us
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../Contact us/contactus.php">
+          <a class="nav-link" href="../../Hassan Traders Sanitary Store/Contact us/contactus.php">
             <i class="bi bi-telephone-fill me-2"></i>Contact Us
           </a>
         </li>
@@ -99,7 +99,7 @@ if (file_exists($cartInitPath)) {
 
       <!-- Cart Icon -->
       <div class="d-flex align-items-center me-lg-3">
-        <a href="../Add-to-Cart-and-CheckOut/Cart.php"
+        <a href="../../Hassan Traders Sanitary Store/Add-to-Cart-and-CheckOut/Cart.php"
            class="position-relative text-dark text-decoration-none">
           <i class="bi bi-cart3 fs-4"></i>
           <span id="cart-count"
@@ -136,23 +136,23 @@ if (file_exists($cartInitPath)) {
                 </div>
               </li>
               <li>
-                <a class="dropdown-item" href="../Profile/profile.php">
+                <a class="dropdown-item" href="../../Hassan Traders Sanitary Store/Profile/profile.php">
                   <i class="bi bi-person-badge-fill"></i> My Profile
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" href="../Profile/profile.php#orders">
+                <a class="dropdown-item" href="../../Hassan Traders Sanitary Store/Profile/profile.php#orders">
                   <i class="bi bi-bag-heart-fill"></i> My Orders
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" href="../Add to Cart and CheckOut/Cart.php">
+                <a class="dropdown-item" href="../../Hassan Traders Sanitary Store/Add-to-Cart-and-CheckOut/Cart.php">
                   <i class="bi bi-cart3"></i> My Cart
                 </a>
               </li>
               <li><hr class="dropdown-divider"/></li>
               <li>
-                <a class="dropdown-item logout-item" href="../login and signup/logout.php">
+                <a class="dropdown-item logout-item" href="../../Hassan Traders Sanitary Store/login and signup/logout.php">
                   <i class="bi bi-box-arrow-right"></i> Logout
                 </a>
               </li>
@@ -160,7 +160,7 @@ if (file_exists($cartInitPath)) {
           </div>
 
         <?php else: ?>
-          <a href="../login and signup/login.php" class="text-decoration-none">
+          <a href="../../Hassan Traders Sanitary Store/login and signup/login.php" class="text-decoration-none">
             <button class="btn btn-premium px-5 rounded-pill d-flex align-items-center gap-2">
               <i class="bi bi-person-circle fs-5"></i>
               <span class="fw-semibold">LOGIN</span>
